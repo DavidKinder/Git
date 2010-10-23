@@ -1,0 +1,56 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" type="text/css" href="Git.css">
+ </head>
+ <body>
+<h1>Revision History</h1>
+
+<b>Git 1.2.8 (Windows Glk 1.40)</b>
+<ul>
+<li>Updated to Git 1.2.8, which fixes a few obscure bugs.
+<li>Corrected problems with formatting and line input when margin images are present.
+<li>Corrected a mistake in the handling of alpha-blended images.
+</ul>
+
+<b>Git 1.2.7 (Windows Glk 1.39)</b>
+<ul>
+<li>Updated to Git 1.2.7, which implements the Glulx 3.1.2 specification (for floating point opcodes).
+<li>The window can be made to fill the entire screen; press <b>Alt+Enter</b> to toggle
+this full screen mode on and off.
+<li>A new configuration file option, "FullScreen", also makes the window fill the entire screen.
+<li>During line input, Ctrl+Left moves the cursor to the start of the current word, and Ctrl+Right
+moves to the end.
+<li>The logic when scaling alpha-blended images has been improved, so there should no longer be
+artifacts round the edges of such images.
+<li>Data being written to files is now flushed whenever input is requested from the user.
+This allows, for example, transcript files to update as a game is being played, and not only
+when the interpreter closes the file.
+<li>Corrected a problem which could result in the options dialog using the wrong font.
+</ul>
+
+<b>Git 1.2.6 (Windows Glk 1.38)</b>
+<ul>
+<li>Fixed a file creation bug in glk_stream_open_file().
+</ul>
+
+<b>Git 1.2.6 (Windows Glk 1.37)</b>
+<ul>
+<li>Updated to Git 1.2.6, which fixes a bug in retained Glk array handling.
+</ul>
+
+<b>Git 1.2.5 (Windows Glk 1.37)</b>
+<ul>
+<li>Updated to Git 1.2.5, which fixes several problems shown by Andrew Plotkin's
+glulxercise test cases.
+</ul>
+
+<b>Git 1.2.4 (Windows Glk 1.37)</b>
+<ul>
+<li>Clicking on a Glk window now only shifts the keyboard input focus to that window if the
+window is capable of text input: this means that after clicking on a graphics window, text can
+still be input in a text buffer window without having to click back to the text buffer window.
+<li>The implementation of the algorithm for scaling images has been sped up again.
+</ul>
+ </body>
+</html>
