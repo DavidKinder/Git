@@ -1,6 +1,6 @@
 Git is an interpreter for the Glulx virtual machine. Its homepage is here:
 
-  http://diden.net/if/git
+http://ifarchive.org/indexes/if-archiveXprogrammingXglulxXinterpretersXgit.html
 
 Git's main goal in life is to be fast. It's about five times faster than Glulxe,
 and about twice as fast as Frotz (using the same Inform source compiled for the
@@ -14,8 +14,11 @@ between each prompt.
 
 Have fun, and let me know what you think!
 
-  Iain Merrick
+  Iain Merrick (Original author)
   iain@diden.net
+
+  David Kinder (Current maintainer)
+  davidk.kinder@virgin.net
 
 --------------------------------------------------------------------------------
 
@@ -31,7 +34,8 @@ hard, depending on what kind of computer you're using and whether you want Git
 to be able to display graphics and play sounds. To find a suitable Glk library,
 look here:
 
-  http://eblong.com/zarf/glk
+http://eblong.com/zarf/glk/
+http://ifarchive.org/indexes/if-archiveXprogrammingXglkXimplementations.html
 
 Exactly how you build and link everything depends on what platform you're on and
 which Glk library you're using. The supplied Makefile should work on any Unix
@@ -131,8 +135,9 @@ memory stream. If you're using the git_unix.c startup file, just make sure
 USE_MMAP isn't defined.
 
 1-byte and 2-byte local variables are not implemented yet. This means git can't
-currently play games created with the Superglus system. This will be fixed at
-some point.
+currently play games created with old versions of the Superglus system. As
+these small local variables now deprecated, it is unlikely that this will be
+fixed.
 
 In the search opcodes, direct keys don't work unless they're exactly 4 bytes
 long.
@@ -267,3 +272,4 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
                   Added gitWithStream() as a workaround for xglk
 
 1.0   2003-10-18  First public release
+
