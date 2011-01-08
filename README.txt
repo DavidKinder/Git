@@ -50,8 +50,8 @@ respectively, but I can't guarantee that they're fully up-to-date.
 
 It should be possible to build Git with any C compiler, but it works best with
 GCC, because that has a non-standard extension that Git can use for a big speed
-boost. GCC 2.95 actually generates faster code than GCC 3, so if you have a
-choice, use the former. (On OS X, this means compiling with 'gcc2'.)
+boost. GCC 2.95 actually generates faster code than later versions, so if you
+have a choice, use the former. (On OS X, this means compiling with 'gcc2'.)
 
 --------------------------------------------------------------------------------
 
@@ -120,12 +120,9 @@ KB. 256KB is usually enough to store dozens of moves.
 
 GCC 3 has bigger problems than I thought. On PowerPC, the direct threading
 option results in much slower code; and on x86, terp.c crashes GCC itself if
-direct threading is used. Therefore, I recommend that you use GCC 2.95 if
-possible. If you only have GCC 3, don't define USE_DIRECT_THREADING, at least
-until the compiler bug is fixed.
-
-Since the previous update, GCC 4 has been released, but I haven't evaluated it
-yet. If you want to give it a try, let me know how you get on!
+direct threading is used. GCC 4 seems to work, given some very limited testing,
+but still results in slow code. Therefore, I recommend that you use GCC 2.95 if
+possible. If you only have GCC 3, don't define USE_DIRECT_THREADING.
 
 Some Glk libraries, such as xglk, can't deal with memory-mapped files. You can
 tell that this is happening if Git can open .ulx files, but complains that .blb
@@ -134,10 +131,9 @@ your startup file, and make sure you're giving it a file stream rather than a
 memory stream. If you're using the git_unix.c startup file, just make sure
 USE_MMAP isn't defined.
 
-1-byte and 2-byte local variables are not implemented yet. This means git can't
-currently play games created with old versions of the Superglus system. As
-these small local variables now deprecated, it is unlikely that this will be
-fixed.
+1-byte and 2-byte local variables are not implemented. This means git can't
+play games created with old versions of the Superglus system. As these small
+local variables now deprecated, it is unlikely that this will be fixed.
 
 In the search opcodes, direct keys don't work unless they're exactly 4 bytes
 long.
