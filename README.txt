@@ -192,6 +192,12 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 
 * Version History
 
+1.2.9 2011-08-28  Fixed a bug in glkop.c dispatching, to do with optional
+                  array arguments, following a similar fix in Glulxe.
+                  Glk array and string operations are now checked for memory
+                  overflows (though not for ROM writing), following a similar
+                  fix in Glulxe.
+
 1.2.8 2010-08-25  Fixed a problem with 'undo' when compiled as 64 bit,
                   contributed by Ben Cressey.
                   Fixed a sign problem for the @fceil opcode, following a
