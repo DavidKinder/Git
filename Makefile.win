@@ -27,7 +27,7 @@ libglk.a:
 	dlltool --dllname=Glk.dll --def=../GlkDll/Glk.def --output-lib=libglk.a
 
 chm:
-	-C:\\Program\ Files\\HTML\ Help\ Workshop\\hhc help\\Git.hhp
+	-C:\\Program\ Files\ \(x86\)\\HTML\ Help\ Workshop\\hhc help\\Git.hhp
 	copy help\\Git.chm ..\\Executables\\Release
 
 clean:
