@@ -192,6 +192,9 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 
 * Version History
 
+1.3.0 2011-12-16  Fixed a bug in glkop.c dispatching, to do with arrays
+                  of opaque objects, following a similar fix in Glulxe.
+
 1.2.9 2011-08-28  Fixed a bug in glkop.c dispatching, to do with optional
                   array arguments, following a similar fix in Glulxe.
                   Glk array and string operations are now checked for memory
