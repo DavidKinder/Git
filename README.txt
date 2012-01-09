@@ -194,6 +194,8 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 
 1.3.0 2011-12-16  Fixed a bug in glkop.c dispatching, to do with arrays
                   of opaque objects, following a similar fix in Glulxe.
+                  Fixed a problem with the memory heap not being sorted
+                  correctly on restore, contributed by Brady Garvin.
 
 1.2.9 2011-08-28  Fixed a bug in glkop.c dispatching, to do with optional
                   array arguments, following a similar fix in Glulxe.
