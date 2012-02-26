@@ -18,7 +18,7 @@ Have fun, and let me know what you think!
   iain@diden.net
 
   David Kinder (Current maintainer)
-  davidk.kinder@virgin.net
+  davidk@davidkinder.co.uk
 
 --------------------------------------------------------------------------------
 
