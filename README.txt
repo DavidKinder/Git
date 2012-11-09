@@ -192,6 +192,9 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 
 * Version History
 
+1.3.1 2012-11-09  Further fixes to glkop.c, following similar fixes added to
+                  Glulxe 0.5.0.
+
 1.3.0 2011-12-16  Fixed a bug in glkop.c dispatching, to do with arrays
                   of opaque objects, following a similar fix in Glulxe.
                   Fixed a problem with the memory heap not being sorted
