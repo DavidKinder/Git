@@ -194,6 +194,7 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 
 1.3.2 2013-03-26  A further fix to glkop.c, following the similar fix added to
                   Glulxe 0.5.1.
+                  Increased the default undo buffer size in all ports to 2Mb.
 
 1.3.1 2012-11-09  Further fixes to glkop.c, following similar fixes added to
                   Glulxe 0.5.0.
