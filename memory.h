@@ -114,8 +114,8 @@ extern void shutdownMemory ();
 // Utility functions -- these just pass an appropriate
 // string to fatalError().
 
-extern git_uint32 memReadError (git_uint32 address);
-extern void memWriteError (git_uint32 address);
+extern noreturn void memReadError (git_uint32 address);
+extern noreturn void memWriteError (git_uint32 address);
 
 // Functions for reading and writing game memory.
 
@@ -126,7 +126,7 @@ GIT_INLINE git_uint32 memRead32 (git_uint32 address)
 	else if (address <= gEndMem - 4)
 		return read32 (gRam + address);
     else
-        return memReadError (address);
+        return memReadError (address), 0;
 }
 
 GIT_INLINE git_uint32 memRead16 (git_uint32 address)
@@ -136,7 +136,7 @@ GIT_INLINE git_uint32 memRead16 (git_uint32 address)
 	else if (address <= gEndMem - 2)
 		return read16 (gRam + address);
     else
-        return memReadError (address);
+        return memReadError (address), 0;
 }
 
 GIT_INLINE git_uint32 memRead8 (git_uint32 address)
@@ -146,7 +146,7 @@ GIT_INLINE git_uint32 memRead8 (git_uint32 address)
     else if (address < gEndMem)
         return read8 (gRam + address);
     else
-        return memReadError (address);
+        return memReadError (address), 0;
 }
 
 GIT_INLINE void memWrite32 (git_uint32 address, git_uint32 val)

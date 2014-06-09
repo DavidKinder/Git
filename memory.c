@@ -167,10 +167,9 @@ void shutdownMemory ()
     gRom = gRam = NULL;
 }
 
-git_uint32 memReadError (git_uint32 address)
+void memReadError (git_uint32 address)
 {
     fatalError ("Out-of-bounds memory access");
-    return 0;
 }
 
 void memWriteError (git_uint32 address)
