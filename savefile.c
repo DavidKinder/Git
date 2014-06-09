@@ -63,10 +63,9 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
     
     while (glk_stream_get_position(file) < fileStart + fileSize)
     {
-        git_uint32 chunkType, chunkSize, chunkStart;
+        git_uint32 chunkType, chunkSize;
         chunkType = readWord (file);
         chunkSize = readWord (file);
-        chunkStart = glk_stream_get_position (file);
 
         if (chunkType == read32("IFhd"))
         {
