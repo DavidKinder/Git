@@ -33,8 +33,18 @@ Opcode* gOpcodeTable;
 // -------------------------------------------------------------
 // Floating point support
 
-#define ENCODE_FLOAT(f) (* (git_uint32*) &f)
-#define DECODE_FLOAT(n) (* (git_float*) &n)
+GIT_INLINE git_uint32 ENCODE_FLOAT(git_float f)
+{
+  git_uint32 n;
+  memcpy(&n, &f, 4);
+  return n;
+}
+
+GIT_INLINE git_float DECODE_FLOAT(git_uint32 n) {
+  git_float f;
+  memcpy(&f, &n, 4);
+  return f;
+}
 
 int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
 {
