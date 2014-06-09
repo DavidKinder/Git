@@ -1487,11 +1487,11 @@ static char *get_game_id()
   static char buf[2*64+2];
   int ix, jx;
 
-  if (!gRom)
+  if (!gInitMem)
     return NULL;
 
   for (ix=0, jx=0; ix<64; ix++) {
-    char ch = gRom[ix];
+    char ch = gInitMem[ix];
     int val = ((ch >> 4) & 0x0F);
     buf[jx++] = ((val < 10) ? (val + '0') : (val + 'A' - 10));
     val = (ch & 0x0F);
