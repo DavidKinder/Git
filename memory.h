@@ -58,6 +58,10 @@ GIT_INLINE void write16 (git_uint8 *ptr, git_uint16 v) {
 	memcpy(ptr, &t, 2);
 }
 
+GIT_INLINE git_uint32 readtag (const char *ptr) {
+	return read32((const git_uint8 *)ptr);
+}
+
 // Accessing single bytes is easy on any platform.
 
 #define read8(ptr)     (*((git_uint8*)(ptr)))

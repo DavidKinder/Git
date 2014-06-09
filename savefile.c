@@ -4,15 +4,15 @@
 
 static void writeWord (git_sint32 word)
 {
-    char buffer [4];
+    git_uint8 buffer [4];
     write32 (buffer, word);
-    glk_put_buffer (buffer, 4);
+    glk_put_buffer ((char *) buffer, 4);
 }
 
 static git_uint32 readWord (strid_t file)
 {
-    char buffer [4];
-    glk_get_buffer_stream (file, buffer, 4);
+    git_uint8 buffer [4];
+    glk_get_buffer_stream (file, (char *) buffer, 4);
     return (git_uint32) read32 (buffer);
 }
 
@@ -47,13 +47,13 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
         return 1;
 
     // Read IFF header.
-    if (readWord (file) != read32("FORM"))
+    if (readWord (file) != readtag("FORM"))
         return 1; // Not an IFF file.
     
     fileSize = readWord (file);
     fileStart = glk_stream_get_position (file);
     
-    if (readWord (file) != read32("IFZS"))
+    if (readWord (file) != readtag("IFZS"))
         return 1; // Not a Quetzal file.
     
     // Discard the current heap.
@@ -67,7 +67,7 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
         chunkType = readWord (file);
         chunkSize = readWord (file);
 
-        if (chunkType == read32("IFhd"))
+        if (chunkType == readtag("IFhd"))
         {
             if (gotIdent)
                 return 1;
@@ -84,7 +84,7 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
                     return 1;
             }
         }
-        else if (chunkType == read32("Stks"))
+        else if (chunkType == readtag("Stks"))
         {
             if (gotStack)
                 return 1;
@@ -98,7 +98,7 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
             for ( ; chunkSize > 0 ; chunkSize -= 4)
                 *gStackPointer++ = readWord(file);
         }
-        else if (chunkType == read32("CMem"))
+        else if (chunkType == readtag("CMem"))
         {
             git_uint32 bytesRead = 0;
             if (gotMemory)
@@ -159,7 +159,7 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
             if (chunkSize & 1)
                 glk_get_char_stream (file);
         }
-        else if (chunkType == read32("MAll"))
+        else if (chunkType == readtag("MAll"))
         {
             glui32 heapSize = 0;
             glui32 * heap = 0;
