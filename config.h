@@ -7,8 +7,8 @@
 // Various compile-time options. You can define them in the
 // makefile or uncomment them here, whichever's easiest.
 
-// Define if we're big-endian and can read and write unaligned data.
-// #define USE_BIG_ENDIAN_UNALIGNED
+// Define this on big-endian systems.
+// #define USE_BIG_ENDIAN
 
 // Define this to use GCC's labels-as-values extension for a big speedup.
 // #define USE_DIRECT_THREADING

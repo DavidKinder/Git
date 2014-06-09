@@ -32,7 +32,7 @@ OPTIONS =
 
 # Mac OS X (PowerPC) settings.
 #CC = gcc2 -Wall -O3 -no-cpp-precomp
-#OPTIONS = -DUSE_DIRECT_THREADING -DUSE_BIG_ENDIAN_UNALIGNED -DUSE_MMAP -DUSE_INLINE
+#OPTIONS = -DUSE_DIRECT_THREADING -DUSE_BIG_ENDIAN -DUSE_MMAP -DUSE_INLINE
 
 # -----------------------------------------------------------------
 # Step 3: decide where you want to install the compiled executable.

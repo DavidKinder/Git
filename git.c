@@ -9,6 +9,18 @@
 // This is the magic number at the start of Blorb files.
 #define FORM 0x464f524d
 
+static void endian_test () {
+#if defined(USE_BIG_ENDIAN)
+    static const char msg[] = "Recompile with USE_BIG_ENDIAN undefined";
+#else
+    static const char msg[] = "Recompile with USE_BIG_ENDIAN defined";
+#endif
+    static const git_uint8 bytes[] = { 1, 2, 3, 4 };
+    if (read32(bytes) != 0x01020304) {
+        fatalError(msg);
+    }
+}
+
 static void gitMain (const git_uint8 * game, git_uint32 gameSize, git_uint32 cacheSize, git_uint32 undoSize)
 {
     git_uint32 version;
@@ -115,6 +127,8 @@ void gitWithStream (strid_t str, git_uint32 cacheSize, git_uint32 undoSize)
     
     char buffer [4];
     
+    endian_test();
+
     glk_stream_set_position (str, 0, seekmode_Start);
     if (4 != glk_get_buffer_stream (str, buffer, 4))
         fatalError ("can't read from game file stream");
@@ -157,6 +171,8 @@ void git (const git_uint8 * game, git_uint32 gameSize, git_uint32 cacheSize, git
 {
     // If this is a blorb file, register it
     // with glk and find the gamefile chunk.
+
+    endian_test();
 
     if (read32 (game) == FORM)
     {
