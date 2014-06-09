@@ -63,10 +63,15 @@
     (((addr) == 0xffffffff) \
       ? (gStackPointer -= 1, Stk4(gStackPointer)) \
       : (memRead32(addr)))
-#define WriteMemory(addr, val)  \
-    if ((addr) == 0xffffffff) \
-    { StkW4(gStackPointer, (val)); gStackPointer += 1;} \
-	else memWrite32((addr), (val))
+#define WriteMemory(addr, val)                          \
+  do {                                                  \
+    if ((addr) == 0xffffffff) {                         \
+      StkW4(gStackPointer, (val));                      \
+      gStackPointer += 1;                               \
+    } else {                                            \
+      memWrite32((addr), (val));                        \
+    }                                                   \
+  } while (0)
 #define CaptureCArray(addr, len, passin)  \
     (grab_temp_c_array(addr, len, passin))
 #define ReleaseCArray(ptr, addr, len, passout)  \
@@ -83,10 +88,15 @@
     (((addr) == 0xffffffff) \
       ? (gStackPointer -= 1, Stk4(gStackPointer)) \
       : (memRead32((addr)+(fieldnum)*4)))
-#define WriteStructField(addr, fieldnum, val)  \
-    if ((addr) == 0xffffffff) \
-    { StkW4(gStackPointer, (val)); gStackPointer += 1;} \
-	else memWrite32((addr)+(fieldnum)*4, (val))
+#define WriteStructField(addr, fieldnum, val)           \
+  do {                                                  \
+    if ((addr) == 0xffffffff) {                         \
+      StkW4(gStackPointer, (val));                      \
+      gStackPointer += 1;                               \
+    } else {                                            \
+      memWrite32((addr)+(fieldnum)*4, (val));           \
+    }                                                   \
+  } while (0)
 
 #define glulx_malloc malloc
 #define glulx_free free
