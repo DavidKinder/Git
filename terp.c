@@ -84,7 +84,6 @@ void startProgram (size_t cacheSize, enum IOMode ioMode)
     git_sint32* top;    // The top of the stack -- that is, the first unusable slot.
 
     git_sint32 args [64]; // Array of arguments. Count is stored in L2.
-    git_uint32 runCounter = 0;
 
     git_uint32 ioRock = 0;
 
@@ -131,12 +130,11 @@ void startProgram (size_t cacheSize, enum IOMode ioMode)
     goto do_enter_function_L1;
 
 #ifdef USE_DIRECT_THREADING
-#define NEXT do { ++runCounter; goto **(pc++); } while(0)
+#define NEXT do { goto **(pc++); } while(0)
 #else
 #define NEXT goto next
 //#define NEXT do { CHECK_USED(0); CHECK_FREE(0); goto next; } while (0)
 next:
-    ++runCounter;
     switch (*pc++)
     {
 #define LABEL(foo) case label_ ## foo: goto do_ ## foo;
@@ -202,15 +200,11 @@ do_S1_addr8:  memWrite8 (READ_PC, S1); NEXT;
 #define UL7 ((git_uint32)L7)
 
 do_recompile:
-    gBlockHeader->runCounter = runCounter;
     pc = compile (READ_PC);
-    runCounter = 0;
 	NEXT;
 	
 do_jump_abs_L7:
-    gBlockHeader->runCounter = runCounter;
     pc = getCode (UL7);
-    runCounter = gBlockHeader->runCounter;
     NEXT;
 
 do_enter_function_L1: // Arg count is in L2.
