@@ -262,7 +262,7 @@ static void parse_glk_args(dispatch_splot_t *splot, char **proto, int depth,
 static void unparse_glk_args(dispatch_splot_t *splot, char **proto, int depth,
   int *argnumptr, glui32 subaddress, int subpassout);
 
-static char *get_game_id(void);
+static maybe_unused char *get_game_id(void);
 
 /* git_init_dispatch():
    Set up the class hash tables and other startup-time stuff.

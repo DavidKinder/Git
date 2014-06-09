@@ -83,4 +83,11 @@ typedef unsigned long git_uint32;
 
 typedef float git_float;
 
+
+#ifdef __GNUC__
+#  define maybe_unused __attribute__((__unused__))
+#else
+#  define maybe_unused
+#endif
+
 #endif // GIT_CONFIG_H

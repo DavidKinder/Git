@@ -95,8 +95,8 @@ void startProgram (size_t cacheSize, enum IOMode ioMode)
     git_uint32 protectPos = 0;
     git_uint32 protectSize = 0;
     
-    git_uint32 glulxPC = 0;
-    git_uint32 glulxOpcode = 0;
+    git_uint32 maybe_unused glulxPC = 0;
+    git_uint32 maybe_unused glulxOpcode = 0;
 
     acceleration_func accelfunc;
 
