@@ -5,46 +5,62 @@
 #define GIT_MEMORY_H
 
 #include "config.h"
+#include <string.h>
 
 // --------------------------------------------------------------
 // Macros for reading and writing big-endian data.
 
-#ifdef USE_BIG_ENDIAN_UNALIGNED
-// We're on a big-endian platform which can handle unaligned
-// accesses, such as the PowerPC. This means we can read and
-// write multi-byte values in glulx memory directly, without
-// having to pack and unpack each byte.
-
-#define read32(ptr)    (*((git_uint32*)(ptr)))
-#define read16(ptr)    (*((git_uint16*)(ptr)))
-#define write32(ptr,v) (read32(ptr)=(git_uint32)(v))
-#define write16(ptr,v) (read16(ptr)=(git_uint16)(v))
-
+GIT_INLINE git_uint16 byteswap16 (git_uint16 v) {
+#if defined(USE_BIG_ENDIAN)
+	return v;
+#elif defined(__GNUC__)
+	return __builtin_bswap16(v);
 #else
-// We're on a little-endian platform, such as the x86, or a
-// big-endian platform that doesn't like unaligned accesses,
-// such as the 68K. This means we have to read and write the
-// slow and tedious way.
+	return
+		((v & 0xFF00) >> 8) |
+		((v & 0x00FF) << 8);
+#endif
+}
 
-#define read32(ptr)    \
-  ( (git_uint32)(((git_uint8 *)(ptr))[0] << 24) \
-  | (git_uint32)(((git_uint8 *)(ptr))[1] << 16) \
-  | (git_uint32)(((git_uint8 *)(ptr))[2] << 8)  \
-  | (git_uint32)(((git_uint8 *)(ptr))[3]))
-#define read16(ptr)    \
-  ( (git_uint16)(((git_uint8 *)(ptr))[0] << 8)  \
-  | (git_uint16)(((git_uint8 *)(ptr))[1]))
+GIT_INLINE git_uint32 byteswap32 (git_uint32 v) {
+#if defined(USE_BIG_ENDIAN)
+	return v;
+#elif defined(__GNUC__)
+	return __builtin_bswap32(v);
+#else
+	return
+		((v & 0xFF000000) >> 24) |
+		((v & 0x00FF0000) >> 8) |
+		((v & 0x0000FF00) << 8) |
+		((v & 0x000000FF) << 24);
+#endif
+}
 
-#define write32(ptr, v)   \
-  (((ptr)[0] = (git_uint8)(((git_uint32)(v)) >> 24)), \
-   ((ptr)[1] = (git_uint8)(((git_uint32)(v)) >> 16)), \
-   ((ptr)[2] = (git_uint8)(((git_uint32)(v)) >> 8)),  \
-   ((ptr)[3] = (git_uint8)(((git_uint32)(v)))))
-#define write16(ptr, v)   \
-  (((ptr)[0] = (git_uint8)(((git_uint32)(v)) >> 8)),  \
-   ((ptr)[1] = (git_uint8)(((git_uint32)(v)))))
+GIT_INLINE git_uint32 read32 (const git_uint8 *ptr) {
+	git_uint32 v;
+	memcpy(&v, ptr, 4);
+	return byteswap32(v);
+}
 
-#endif // USE_BIG_ENDIAN_UNALIGNED
+GIT_INLINE git_uint16 read16 (const git_uint8 *ptr) {
+	git_uint16 v;
+	memcpy(&v, ptr, 2);
+	return byteswap16(v);
+}
+
+GIT_INLINE void write32 (git_uint8 *ptr, git_uint32 v) {
+	git_uint32 t = byteswap32(v);
+	memcpy(ptr, &t, 4);
+}
+
+GIT_INLINE void write16 (git_uint8 *ptr, git_uint16 v) {
+	git_uint16 t = byteswap16(v);
+	memcpy(ptr, &t, 2);
+}
+
+GIT_INLINE git_uint32 readtag (const char *ptr) {
+	return read32((const git_uint8 *)ptr);
+}
 
 GIT_INLINE git_uint32 readtag (const char *ptr) {
 	return read32((const git_uint8 *)ptr);
