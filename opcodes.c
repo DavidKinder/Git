@@ -388,6 +388,8 @@ void parseInstruction (git_uint32* pc, int * done)
         case op_restoreundo: parseS (pc, label_restoreundo); break;
         case op_protect: parseLL (pc, label_protect); break;
         case op_verify: parseS (pc, label_verify); break;
+        case op_hasundo: parseS (pc, label_hasundo); break;
+        case op_discardundo: emitCode (label_discardundo); break;
 
         case op_save:
             parseModeNibbles (pc, 2, modes);
