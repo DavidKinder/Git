@@ -50,7 +50,7 @@ include $(GLKINCLUDEDIR)/$(GLKMAKEFILE)
 
 CFLAGS = $(OPTIONS) -I$(GLKINCLUDEDIR)
 
-LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS) 
+LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS) -lm
 
 HEADERS = version.h git.h config.h compiler.h \
 	memory.h opcodes.h labels.inc
