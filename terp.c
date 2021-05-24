@@ -207,7 +207,7 @@ do_S1_addr8:  memWrite8 (READ_PC, S1); NEXT;
 #define UL7 ((git_uint32)L7)
 
 do_recompile:
-    pc = compile (READ_PC);
+    pc = compile (*pc);
 	NEXT;
 	
 do_jump_abs_L7:
