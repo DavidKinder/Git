@@ -185,6 +185,9 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 
 * Version History
 
+1.3.6 2021-05-25  Direct threading now works for 64 bit builds.
+                  Fixed an issue with compiling with Visual C++.
+
 1.3.5 2016-11-19  Fixed a bug when the streamnum opcode is called with the
                   smallest possible negative number.
 
