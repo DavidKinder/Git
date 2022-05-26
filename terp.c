@@ -31,6 +31,41 @@ Opcode* gOpcodeTable;
 #define CHECK_USED(n) if ((sp - values) < (n)) goto stack_underflow
 
 // -------------------------------------------------------------
+// Random number generator, from Glulxe
+
+static glui32 rand_table[55]; /* State for the RNG. */
+static int rand_index1, rand_index2;
+
+glui32 lo_random()
+{
+  rand_index1 = (rand_index1 + 1) % 55;
+  rand_index2 = (rand_index2 + 1) % 55;
+  rand_table[rand_index1] = rand_table[rand_index1] - rand_table[rand_index2];
+  return rand_table[rand_index1];
+}
+
+void lo_seed_random(glui32 seed)
+{
+  glui32 k = 1;
+  int i, loop;
+
+  rand_table[54] = seed;
+  rand_index1 = 0;
+  rand_index2 = 31;
+
+  for (i = 0; i < 55; i++) {
+    int ii = (21 * i) % 55;
+    rand_table[ii] = k;
+    k = seed - k;
+    seed = rand_table[ii];
+  }
+  for (loop = 0; loop < 4; loop++) {
+    for (i = 0; i < 55; i++)
+      rand_table[i] = rand_table[i] - rand_table[ (1 + i + 30) % 55];
+  }
+}
+
+// -------------------------------------------------------------
 // Floating point support
 
 GIT_INLINE git_uint32 ENCODE_FLOAT(git_float f)
@@ -46,7 +81,7 @@ GIT_INLINE git_float DECODE_FLOAT(git_uint32 n) {
   return f;
 }
 
-int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
+static int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
 {
   git_float F1, F2;
 
@@ -59,10 +94,6 @@ int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
   F2 = fabs(DECODE_FLOAT(L3));
   return ((F1 <= F2) && (F1 >= -F2));
 }
-
-#ifdef USE_OWN_POWF
-float git_powf(float x, float y);
-#endif
 
 // -------------------------------------------------------------
 // Functions
@@ -117,7 +148,7 @@ void startProgram (size_t cacheSize, enum IOMode ioMode)
     initCompiler (cacheSize);
 
     // Initialise the random number generator.
-    srand (time(NULL));
+    lo_seed_random (time(NULL));
 
     // Set up the stack.
 
@@ -137,7 +168,7 @@ void startProgram (size_t cacheSize, enum IOMode ioMode)
 #if defined(USE_DIRECT_THREADING) && (UINTPTR_MAX > 0xffffffffULL)
 #define NEXT do { goto *(Opcode)(*(pc++) | opcodeHi); } while(0)
 #elif defined(USE_DIRECT_THREADING)
-#define NEXT do { goto **(pc++); } while(0)
+#define NEXT do { goto *(Opcode)(*(pc++)); } while(0)
 #else
 #define NEXT goto next
 //#define NEXT do { CHECK_USED(0); CHECK_FREE(0); goto next; } while (0)
@@ -1176,25 +1207,17 @@ do_tailcall:
 
     do_random:
         if (L1 > 0)
-            S1 = rand() % L1;
+            S1 = lo_random () % L1;
         else if (L1 < 0)
-            S1 = -(rand() % -L1);
+            S1 = -(lo_random () % -L1);
         else
         {
-            // The parameter is zero, so we should generate a
-            // random number in "the full 32-bit range". The rand()
-            // function might not cover the entire range, so we'll
-            // generate the number with several calls.
-#if (RAND_MAX < 0xffff)
-            S1 = rand() ^ (rand() << 12) ^ (rand() << 24);
-#else
-            S1 = (rand() & 0xffff) | (rand() << 16);
-#endif
+            S1 = lo_random ();
         }
         NEXT;
 
     do_setrandom:
-        srand (L1 ? L1 : time(NULL));
+        lo_seed_random (L1 ? L1 : time(NULL));
         NEXT;
 
     do_glk:
@@ -1383,11 +1406,7 @@ do_tailcall:
         NEXT;
 
     do_pow:
-#ifdef USE_OWN_POWF
-        F1 = git_powf(DECODE_FLOAT(L1), DECODE_FLOAT(L2));
-#else
         F1 = powf(DECODE_FLOAT(L1), DECODE_FLOAT(L2));
-#endif
         S1 = ENCODE_FLOAT(F1);
         NEXT;
 

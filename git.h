@@ -117,6 +117,9 @@ extern void emitCode (Label);
 
 extern git_sint32* gStackPointer;
 
+glui32 lo_random ();
+void lo_seed_random (glui32 seed);
+
 extern void startProgram (size_t cacheSize, enum IOMode ioMode);
 
 // glkop.c
