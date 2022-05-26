@@ -187,6 +187,8 @@ LABEL (restart)
 LABEL (restore)
 LABEL (restoreundo)
 LABEL (protect)
+LABEL (hasundo)
+LABEL (discardundo)
 
 LABEL (glk)
 

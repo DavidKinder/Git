@@ -66,6 +66,7 @@ enum GestaltSelector
     GESTALT_ACCELERATION = 9,
     GESTALT_ACCELFUNC    = 10,
     GESTALT_FLOAT        = 11,
+    GESTALT_EXTUNDO      = 12,
     
     // This special selector returns 1 if the cache control
     // opcodes 'git_setcacheram' and 'git_prunecache' are available.
@@ -150,9 +151,11 @@ extern void initUndo (git_uint32 size);
 extern void resetUndo ();
 extern void shutdownUndo ();
 
+extern int  hasUndo ();
 extern int  saveUndo (git_sint32* base, git_sint32* sp);
 extern int  restoreUndo (git_sint32* base,
                 git_uint32 protectPos, git_uint32 protectSize);
+extern void discardUndo ();
 
 // heap.c
 

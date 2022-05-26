@@ -1438,6 +1438,16 @@ do_tailcall:
         S1 = ENCODE_FLOAT(F1);
         NEXT;
 
+    // Extended undo (new with glulx spec 3.1.3)
+
+    do_hasundo:
+        S1 = hasUndo();
+        NEXT;
+
+    do_discardundo:
+        discardUndo();
+        NEXT;
+
     // Special Git opcodes
     
     do_git_setcacheram:
