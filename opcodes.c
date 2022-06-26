@@ -552,12 +552,12 @@ void parseInstruction (git_uint32* pc, int * done)
         case op_dtonumn: parseLLS (pc, label_dtonumn); break;
         case op_ftod: parseLSS (pc, label_ftod); break;
         case op_dtof: parseLLS (pc, label_dtof); break;
+        ###*/
         case op_dceil: parseLLSS (pc, label_dceil); break;
         case op_dfloor: parseLLSS (pc, label_dfloor); break;
         case op_dsqrt: parseLLSS (pc, label_dsqrt); break;
         case op_dexp: parseLLSS (pc, label_dexp); break;
         case op_dlog: parseLLSS (pc, label_dlog); break;
-        ###*/
 
         case op_dadd: parseLLLLSS (pc, label_dadd); break;
         case op_dsub: parseLLLLSS (pc, label_dsub); break;

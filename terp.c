@@ -1494,16 +1494,6 @@ do_tailcall:
         ENCODE_DOUBLE(D1, &S1, &S2);
         NEXT;
 
-    do_dpow:
-        D1 = pow(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
-        NEXT;
-
-    do_datan2:
-        D1 = atan2(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
-        NEXT;
-
     do_dmodr:
         D1 = fmod(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
         ENCODE_DOUBLE(D1, &S1, &S2);
@@ -1519,6 +1509,36 @@ do_tailcall:
           L5 = (L1 ^ L3) & 0x80000000;
         S1 = L5;
         S2 = L6;
+        NEXT;
+
+    do_dceil:
+        D1 = ceil(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dfloor:
+        D1 = floor(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dsqrt:
+        D1 = sqrt(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dexp:
+        D1 = exp(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dlog:
+        D1 = log(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dpow:
+        D1 = pow(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S1, &S2);
         NEXT;
 
     do_dsin:
@@ -1548,6 +1568,11 @@ do_tailcall:
 
     do_datan:
         D1 = atan(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_datan2:
+        D1 = atan2(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
         ENCODE_DOUBLE(D1, &S1, &S2);
         NEXT;
 

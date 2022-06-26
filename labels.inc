@@ -237,6 +237,12 @@ LABEL (datan2)
 LABEL (dmodr)
 LABEL (dmodq)
 
+LABEL (dceil)
+LABEL (dfloor)
+LABEL (dsqrt)
+LABEL (dexp)
+LABEL (dlog)
+
 LABEL (dsin)
 LABEL (dcos)
 LABEL (dtan)
