@@ -1521,6 +1521,36 @@ do_tailcall:
         S2 = L6;
         NEXT;
 
+    do_dsin:
+        D1 = sin(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dcos:
+        D1 = cos(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dtan:
+        D1 = tan(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dasin:
+        D1 = asin(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dacos:
+        D1 = acos(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_datan:
+        D1 = atan(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
     // Extended undo (new with glulx spec 3.1.3)
 
     do_hasundo:

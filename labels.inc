@@ -237,6 +237,14 @@ LABEL (datan2)
 LABEL (dmodr)
 LABEL (dmodq)
 
+LABEL (dsin)
+LABEL (dcos)
+LABEL (dtan)
+LABEL (dasin)
+LABEL (dacos)
+LABEL (datan)
+
+
 LABEL (git_setcacheram)
 LABEL (git_prunecache)
 
