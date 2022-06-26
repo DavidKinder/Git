@@ -1479,6 +1479,31 @@ do_tailcall:
         ENCODE_DOUBLE(D1, &S1, &S2);
         NEXT;
 
+    do_dsub:
+        D1 = (DECODE_DOUBLE(L1, L2) - DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dmul:
+        D1 = (DECODE_DOUBLE(L1, L2) * DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_ddiv:
+        D1 = (DECODE_DOUBLE(L1, L2) / DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dpow:
+        D1 = pow(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_datan2:
+        D1 = atan2(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
     // Extended undo (new with glulx spec 3.1.3)
 
     do_hasundo:

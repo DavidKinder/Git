@@ -546,7 +546,48 @@ void parseInstruction (git_uint32* pc, int * done)
 
         // Double-precision
 
+            /*###
+        case op_numtod: parseLSS (pc, label_numtod); break;
+        case op_dtonumz: parseLLS (pc, label_dtonumz); break;
+        case op_dtonumn: parseLLS (pc, label_dtonumn); break;
+        case op_ftod: parseLSS (pc, label_ftod); break;
+        case op_dtof: parseLLS (pc, label_dtof); break;
+        case op_dceil: parseLLSS (pc, label_dceil); break;
+        case op_dfloor: parseLLSS (pc, label_dfloor); break;
+        case op_dsqrt: parseLLSS (pc, label_dsqrt); break;
+        case op_dexp: parseLLSS (pc, label_dexp); break;
+        case op_dlog: parseLLSS (pc, label_dlog); break;
+        ###*/
+
         case op_dadd: parseLLLLSS (pc, label_dadd); break;
+        case op_dsub: parseLLLLSS (pc, label_dsub); break;
+        case op_dmul: parseLLLLSS (pc, label_dmul); break;
+        case op_ddiv: parseLLLLSS (pc, label_ddiv); break;
+        case op_dpow: parseLLLLSS (pc, label_dpow); break;
+        case op_datan2: parseLLLLSS (pc, label_datan2); break;
+
+            /*###
+        case op_dmodq: parseLLLLSS (pc, label_dmodq); break;
+        case op_dmodr: parseLLLLSS (pc, label_dmodr); break;
+
+        case op_dsin: parseLLSS (pc, label_dsin); break;
+        case op_dcos: parseLLSS (pc, label_dcos); break;
+        case op_dtan: parseLLSS (pc, label_dtan); break;
+        case op_dasin: parseLLSS (pc, label_dasin); break;
+        case op_dacos: parseLLSS (pc, label_dacos); break;
+        case op_datan: parseLLSS (pc, label_datan); break;
+
+        case op_jdeq: parseLLLLLLL_branch (pc, label_jdeq_var); break;
+        case op_jdne: parseLLLLLLL_branch (pc, label_jdne_var); break;
+
+        case op_jdlt: parseLLLLL_branch (pc, label_jdlt_var); break;
+        case op_jdle: parseLLLLL_branch (pc, label_jdle_var); break;
+        case op_jdgt: parseLLLLL_branch (pc, label_jdgt_var); break;
+        case op_jdge: parseLLLLL_branch (pc, label_jdge_var); break;
+
+        case op_jdisnan: parseLLL_branch (pc, label_jdisnan_var); break;
+        case op_jdisinf: parseLLL_branch (pc, label_jdisinf_var); break;
+        ###*/
            
         // Special Git opcodes
         

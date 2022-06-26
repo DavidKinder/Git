@@ -228,6 +228,11 @@ LABEL (atan)
 LABEL (atan2)
 
 LABEL (dadd)
+LABEL (dsub)
+LABEL (dmul)
+LABEL (ddiv)
+LABEL (dpow)
+LABEL (datan2)
 
 LABEL (git_setcacheram)
 LABEL (git_prunecache)
