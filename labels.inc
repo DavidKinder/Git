@@ -234,6 +234,9 @@ LABEL (ddiv)
 LABEL (dpow)
 LABEL (datan2)
 
+LABEL (dmodr)
+LABEL (dmodq)
+
 LABEL (git_setcacheram)
 LABEL (git_prunecache)
 

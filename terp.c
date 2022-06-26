@@ -120,7 +120,7 @@ void startProgram (size_t cacheSize, enum IOMode ioMode)
 #define S1 L1
 #define S2 L2
     git_float F1=0.0f, F2=0.0f, F3=0.0f, F4=0.0f;
-    git_double D1=0.0f;
+    git_double D1=0.0f, D2=0.0f, D3=0.0f;
 
     git_sint32* base;   // Bottom of the stack.
     git_sint32* frame;  // Bottom of the current stack frame.
@@ -1502,6 +1502,23 @@ do_tailcall:
     do_datan2:
         D1 = atan2(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
         ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dmodr:
+        D1 = fmod(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dmodq:
+        D1 = DECODE_DOUBLE(L1, L2);
+        D2 = DECODE_DOUBLE(L3, L4);
+        D3 = fmod(D1, D2);
+        D3 = (D1-D3) / D2;
+        ENCODE_DOUBLE(D3, &L5, &L6);
+        if ((L5 == 0) || (L5 == 0x80000000))
+          L5 = (L1 ^ L3) & 0x80000000;
+        S1 = L5;
+        S2 = L6;
         NEXT;
 
     // Extended undo (new with glulx spec 3.1.3)
