@@ -87,11 +87,11 @@ GIT_INLINE void ENCODE_DOUBLE(git_double d, git_sint32 *hi, git_sint32 *lo)
   memcpy(lo, ((char *)&d)+4, 4);
 }
 
-GIT_INLINE git_float DECODE_DOUBLE(git_uint32 hi, git_uint32 lo)
+GIT_INLINE git_double DECODE_DOUBLE(git_uint32 hi, git_uint32 lo)
 {
   git_double d;
   memcpy(&d, &hi, 4);
-  memcpy(((char *)&d)+4, &hi, 4);
+  memcpy(((char *)&d)+4, &lo, 4);
   return d;
 }
 
@@ -1478,7 +1478,7 @@ do_tailcall:
 
     do_numtod:
         D1 = (git_double) L1;
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dtonumz:
@@ -1513,7 +1513,7 @@ do_tailcall:
 
     do_ftod:
         D1 = (git_double) DECODE_FLOAT(L1);
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dtof:
@@ -1523,27 +1523,27 @@ do_tailcall:
 
     do_dadd:
         D1 = (DECODE_DOUBLE(L1, L2) + DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dsub:
         D1 = (DECODE_DOUBLE(L1, L2) - DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dmul:
         D1 = (DECODE_DOUBLE(L1, L2) * DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_ddiv:
         D1 = (DECODE_DOUBLE(L1, L2) / DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dmodr:
         D1 = fmod(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dmodq:
@@ -1560,67 +1560,67 @@ do_tailcall:
 
     do_dceil:
         D1 = ceil(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dfloor:
         D1 = floor(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dsqrt:
         D1 = sqrt(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dexp:
         D1 = exp(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dlog:
         D1 = log(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dpow:
         D1 = pow(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dsin:
         D1 = sin(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dcos:
         D1 = cos(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dtan:
         D1 = tan(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dasin:
         D1 = asin(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_dacos:
         D1 = acos(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_datan:
         D1 = atan(DECODE_DOUBLE(L1, L2));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     do_datan2:
         D1 = atan2(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
-        ENCODE_DOUBLE(D1, &S1, &S2);
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     // Extended undo (new with glulx spec 3.1.3)
