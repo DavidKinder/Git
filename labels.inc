@@ -230,6 +230,8 @@ LABEL (atan2)
 LABEL (numtod)
 LABEL (dtonumz)
 LABEL (dtonumn)
+LABEL (ftod)
+LABEL (dtof)
 
 LABEL (dadd)
 LABEL (dsub)

@@ -1509,6 +1509,16 @@ do_tailcall:
         }
         NEXT;
 
+    do_ftod:
+        D1 = (git_double) DECODE_FLOAT(L1);
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dtof:
+        F1 = (git_float) DECODE_DOUBLE(L1, L2);
+        S1 = ENCODE_FLOAT(F1);
+        NEXT;
+
     do_dadd:
         D1 = (DECODE_DOUBLE(L1, L2) + DECODE_DOUBLE(L3, L4));
         ENCODE_DOUBLE(D1, &S1, &S2);
