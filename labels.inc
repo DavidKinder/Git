@@ -227,6 +227,8 @@ LABEL (acos)
 LABEL (atan)
 LABEL (atan2)
 
+LABEL (dadd)
+
 LABEL (git_setcacheram)
 LABEL (git_prunecache)
 
