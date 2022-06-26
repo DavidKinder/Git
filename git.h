@@ -67,6 +67,7 @@ enum GestaltSelector
     GESTALT_ACCELFUNC    = 10,
     GESTALT_FLOAT        = 11,
     GESTALT_EXTUNDO      = 12,
+    GESTALT_DOUBLE       = 13,
     
     // This special selector returns 1 if the cache control
     // opcodes 'git_setcacheram' and 'git_prunecache' are available.

@@ -48,6 +48,9 @@ git_uint32 gestalt (enum GestaltSelector sel, git_uint32 param)
         case GESTALT_EXTUNDO:
             return 1;
 
+        case GESTALT_DOUBLE:
+            return 1;
+
         case GESTALT_GIT_CACHE_CONTROL:
             return 1;
             
