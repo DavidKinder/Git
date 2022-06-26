@@ -113,7 +113,7 @@ static int doubleCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3, git_sint32
 {
   git_double D1, D2;
 
-  if (((L5 & 0x7FF00000) == 0x7FF00000) && ((L5 & 0xFFFFF) != 0x0) || (L6 != 0x0))
+  if (((L5 & 0x7FF00000) == 0x7FF00000) && (((L5 & 0xFFFFF) != 0x0) || (L6 != 0x0)))
     return 0;
   if ((L1 == 0x7FF00000 || L1 == 0xFFF00000) && L2 == 0x0 && (L3 == 0x7FF00000 || L3 == 0xFFF00000) && L4 == 0x0)
     return (L1 == L3);
