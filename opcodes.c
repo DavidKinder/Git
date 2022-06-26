@@ -546,10 +546,10 @@ void parseInstruction (git_uint32* pc, int * done)
 
         // Double-precision
 
-            /*###
         case op_numtod: parseLSS (pc, label_numtod); break;
         case op_dtonumz: parseLLS (pc, label_dtonumz); break;
         case op_dtonumn: parseLLS (pc, label_dtonumn); break;
+            /*###
         case op_ftod: parseLSS (pc, label_ftod); break;
         case op_dtof: parseLLS (pc, label_dtof); break;
         ###*/

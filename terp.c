@@ -1474,6 +1474,41 @@ do_tailcall:
 
     // Double-precision (new with glulx spec 3.1.3)
 
+    do_numtod:
+        D1 = (git_double) L1;
+        ENCODE_DOUBLE(D1, &S1, &S2);
+        NEXT;
+
+    do_dtonumz:
+        D1 = DECODE_DOUBLE(L1, L2);
+        if (!signbit(D1)) {
+          if (isnan(D1) || isinf(D1) || (D1 > 2147483647.0))
+            S1 = 0x7FFFFFFF;
+          else
+            S1 = (git_sint32) trunc(D1);
+        } else {
+          if (isnan(D1) || isinf(D1) || (D1 < -2147483647.0))
+            S1 = 0x80000000;
+          else
+            S1 = (git_sint32) trunc(D1);
+        }
+        NEXT;
+
+    do_dtonumn:
+        D1 = DECODE_DOUBLE(L1, L2);
+        if (!signbit(D1)) {
+          if (isnan(D1) || isinf(D1) || (D1 > 2147483647.0))
+            S1 = 0x7FFFFFFF;
+          else
+            S1 = (git_sint32) round(D1);
+        } else {
+          if (isnan(D1) || isinf(D1) || (D1 < -2147483647.0))
+            S1 = 0x80000000;
+          else
+            S1 = (git_sint32) round(D1);
+        }
+        NEXT;
+
     do_dadd:
         D1 = (DECODE_DOUBLE(L1, L2) + DECODE_DOUBLE(L3, L4));
         ENCODE_DOUBLE(D1, &S1, &S2);

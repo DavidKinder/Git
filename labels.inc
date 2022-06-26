@@ -227,6 +227,10 @@ LABEL (acos)
 LABEL (atan)
 LABEL (atan2)
 
+LABEL (numtod)
+LABEL (dtonumz)
+LABEL (dtonumn)
+
 LABEL (dadd)
 LABEL (dsub)
 LABEL (dmul)
