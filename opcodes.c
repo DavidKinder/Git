@@ -575,11 +575,8 @@ void parseInstruction (git_uint32* pc, int * done)
         case op_dacos: parseLLSS (pc, label_dacos); break;
         case op_datan: parseLLSS (pc, label_datan); break;
 
-            /*###
         case op_jdeq: parseLLLLLLL_branch (pc, label_jdeq_var); break;
         case op_jdne: parseLLLLLLL_branch (pc, label_jdne_var); break;
-        ###*/
-
         case op_jdlt: parseLLLLL_branch (pc, label_jdlt_var); break;
         case op_jdle: parseLLLLL_branch (pc, label_jdle_var); break;
         case op_jdgt: parseLLLLL_branch (pc, label_jdgt_var); break;

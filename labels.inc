@@ -159,7 +159,9 @@ LABEL (astorebit)
 	LABEL (jdgt ## tag)   \
 	LABEL (jdle ## tag)   \
 	LABEL (jdisnan ## tag)  \
-	LABEL (jdisinf ## tag)
+	LABEL (jdisinf ## tag)  \
+	LABEL (jdeq ## tag)     \
+	LABEL (jdne ## tag)
 
 BRANCH_LABELS(_var)
 BRANCH_LABELS(_const)

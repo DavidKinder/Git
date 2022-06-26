@@ -109,6 +109,20 @@ static int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
   return ((F1 <= F2) && (F1 >= -F2));
 }
 
+static int doubleCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3, git_sint32 L4, git_sint32 L5, git_sint32 L6, git_sint32 L7)
+{
+  git_double D1, D2;
+
+  if (((L5 & 0x7FF00000) == 0x7FF00000) && ((L5 & 0xFFFFF) != 0x0) || (L6 != 0x0))
+    return 0;
+  if ((L1 == 0x7FF00000 || L1 == 0xFFF00000) && L2 == 0x0 && (L3 == 0x7FF00000 || L3 == 0xFFF00000) && L4 == 0x0)
+    return (L1 == L3);
+
+  D1 = DECODE_DOUBLE(L3, L4) - DECODE_DOUBLE(L1, L2);
+  D2 = fabs(DECODE_DOUBLE(L5, L6));
+  return ((D1 <= D2) && (D1 >= -D2));
+}
+
 // -------------------------------------------------------------
 // Functions
 
@@ -443,6 +457,8 @@ do_enter_function_L1: // Arg count is in L2.
     DO_JUMP(jdge,   L5, DECODE_DOUBLE(L1, L2) >= DECODE_DOUBLE(L3, L4));
     DO_JUMP(jdgt,   L5, DECODE_DOUBLE(L1, L2) > DECODE_DOUBLE(L3, L4));
     DO_JUMP(jdle,   L5, DECODE_DOUBLE(L1, L2) <= DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdeq,   L7, doubleCompare(L1, L2, L3, L4, L5, L6, L7) != 0);
+    DO_JUMP(jdne,   L7, doubleCompare(L1, L2, L3, L4, L5, L6, L7) == 0);
     DO_JUMP(jdisinf, L3, (((L1 == 0x7FF00000) || (L1 == 0xFFF00000)) && L2 == 0x0));
     DO_JUMP(jdisnan, L3, (((L1 & 0x7FF00000) == 0x7FF00000) && (((L1 & 0xFFFFF) != 0) || (L2 != 0x0))));
 
@@ -450,6 +466,7 @@ do_enter_function_L1: // Arg count is in L2.
 
     do_jumpabs: L7 = L1; goto do_jump_abs_L7; NEXT;
 
+    do_goto_L7_from_L7: L1 = L7; goto do_goto_L1_from_L7;
     do_goto_L5_from_L7: L1 = L5; goto do_goto_L1_from_L7;
     do_goto_L4_from_L7: L1 = L4; goto do_goto_L1_from_L7;
     do_goto_L3_from_L7: L1 = L3; goto do_goto_L1_from_L7;
