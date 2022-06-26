@@ -81,6 +81,20 @@ GIT_INLINE git_float DECODE_FLOAT(git_uint32 n) {
   return f;
 }
 
+GIT_INLINE void ENCODE_DOUBLE(git_double d, git_uint32 *hi, git_uint32 *lo)
+{
+  memcpy(hi, &d, 4);
+  memcpy(lo, ((char *)&d)+4, 4);
+}
+
+GIT_INLINE git_float DECODE_DOUBLE(git_uint32 hi, git_uint32 lo)
+{
+  git_double d;
+  memcpy(&d, &hi, 4);
+  memcpy(((char *)&d)+4, &hi, 4);
+  return d;
+}
+
 static int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
 {
   git_float F1, F2;
