@@ -583,10 +583,10 @@ void parseInstruction (git_uint32* pc, int * done)
         case op_jdle: parseLLLLL_branch (pc, label_jdle_var); break;
         case op_jdgt: parseLLLLL_branch (pc, label_jdgt_var); break;
         case op_jdge: parseLLLLL_branch (pc, label_jdge_var); break;
+        ###*/
 
         case op_jdisnan: parseLLL_branch (pc, label_jdisnan_var); break;
         case op_jdisinf: parseLLL_branch (pc, label_jdisinf_var); break;
-        ###*/
            
         // Special Git opcodes
         

@@ -153,7 +153,9 @@ LABEL (astorebit)
 	LABEL (jisnan ## tag) \
 	LABEL (jisinf ## tag) \
 	LABEL (jfeq ## tag)   \
-	LABEL (jfne ## tag)
+	LABEL (jfne ## tag)   \
+	LABEL (jdisnan ## tag)  \
+	LABEL (jdisinf ## tag)
 
 BRANCH_LABELS(_var)
 BRANCH_LABELS(_const)
@@ -255,7 +257,6 @@ LABEL (dtan)
 LABEL (dasin)
 LABEL (dacos)
 LABEL (datan)
-
 
 LABEL (git_setcacheram)
 LABEL (git_prunecache)

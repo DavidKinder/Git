@@ -439,6 +439,8 @@ do_enter_function_L1: // Arg count is in L2.
     DO_JUMP(jfle,   L3, DECODE_FLOAT(L1) <= DECODE_FLOAT(L2));
     DO_JUMP(jfeq,   L4, floatCompare(L1, L2, L3) != 0);
     DO_JUMP(jfne,   L4, floatCompare(L1, L2, L3) == 0);
+    DO_JUMP(jdisinf, L3, (((L1 == 0x7FF00000) || (L1 == 0xFFF00000)) && L2 == 0x0));
+    DO_JUMP(jdisnan, L3, (((L1 & 0x7FF00000) == 0x7FF00000) && (((L1 & 0xFFFFF) != 0) || (L2 != 0x0))));
 
 #undef DO_JUMP
 
