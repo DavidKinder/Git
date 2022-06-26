@@ -439,6 +439,10 @@ do_enter_function_L1: // Arg count is in L2.
     DO_JUMP(jfle,   L3, DECODE_FLOAT(L1) <= DECODE_FLOAT(L2));
     DO_JUMP(jfeq,   L4, floatCompare(L1, L2, L3) != 0);
     DO_JUMP(jfne,   L4, floatCompare(L1, L2, L3) == 0);
+    DO_JUMP(jdlt,   L5, DECODE_DOUBLE(L1, L2) < DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdge,   L5, DECODE_DOUBLE(L1, L2) >= DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdgt,   L5, DECODE_DOUBLE(L1, L2) > DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdle,   L5, DECODE_DOUBLE(L1, L2) <= DECODE_DOUBLE(L3, L4));
     DO_JUMP(jdisinf, L3, (((L1 == 0x7FF00000) || (L1 == 0xFFF00000)) && L2 == 0x0));
     DO_JUMP(jdisnan, L3, (((L1 & 0x7FF00000) == 0x7FF00000) && (((L1 & 0xFFFFF) != 0) || (L2 != 0x0))));
 
@@ -446,6 +450,7 @@ do_enter_function_L1: // Arg count is in L2.
 
     do_jumpabs: L7 = L1; goto do_jump_abs_L7; NEXT;
 
+    do_goto_L5_from_L7: L1 = L5; goto do_goto_L1_from_L7;
     do_goto_L4_from_L7: L1 = L4; goto do_goto_L1_from_L7;
     do_goto_L3_from_L7: L1 = L3; goto do_goto_L1_from_L7;
     do_goto_L2_from_L7: L1 = L2; goto do_goto_L1_from_L7;

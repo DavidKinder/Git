@@ -154,6 +154,10 @@ LABEL (astorebit)
 	LABEL (jisinf ## tag) \
 	LABEL (jfeq ## tag)   \
 	LABEL (jfne ## tag)   \
+	LABEL (jdlt ## tag)   \
+	LABEL (jdge ## tag)   \
+	LABEL (jdgt ## tag)   \
+	LABEL (jdle ## tag)   \
 	LABEL (jdisnan ## tag)  \
 	LABEL (jdisinf ## tag)
 
