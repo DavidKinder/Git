@@ -1576,8 +1576,8 @@ do_tailcall:
         ENCODE_DOUBLE(D3, &L5, &L6);
         if ((L5 == 0) || (L5 == 0x80000000))
           L5 = (L1 ^ L3) & 0x80000000;
-        S1 = L5;
-        S2 = L6;
+        S2 = L5;
+        S1 = L6;
         NEXT;
 
     do_dceil:
