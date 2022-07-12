@@ -81,6 +81,20 @@ GIT_INLINE git_float DECODE_FLOAT(git_uint32 n) {
   return f;
 }
 
+GIT_INLINE void ENCODE_DOUBLE(git_double d, git_sint32 *hi, git_sint32 *lo)
+{
+  memcpy(lo, &d, 4);
+  memcpy(hi, ((char *)&d)+4, 4);
+}
+
+GIT_INLINE git_double DECODE_DOUBLE(git_uint32 hi, git_uint32 lo)
+{
+  git_double d;
+  memcpy(&d, &lo, 4);
+  memcpy(((char *)&d)+4, &hi, 4);
+  return d;
+}
+
 static int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
 {
   git_float F1, F2;
@@ -95,6 +109,20 @@ static int floatCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3)
   return ((F1 <= F2) && (F1 >= -F2));
 }
 
+static int doubleCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3, git_sint32 L4, git_sint32 L5, git_sint32 L6, git_sint32 L7)
+{
+  git_double D1, D2;
+
+  if (((L5 & 0x7FF00000) == 0x7FF00000) && (((L5 & 0xFFFFF) != 0x0) || (L6 != 0x0)))
+    return 0;
+  if ((L1 == 0x7FF00000 || L1 == 0xFFF00000) && L2 == 0x0 && (L3 == 0x7FF00000 || L3 == 0xFFF00000) && L4 == 0x0)
+    return (L1 == L3);
+
+  D1 = DECODE_DOUBLE(L3, L4) - DECODE_DOUBLE(L1, L2);
+  D2 = fabs(DECODE_DOUBLE(L5, L6));
+  return ((D1 <= D2) && (D1 >= -D2));
+}
+
 // -------------------------------------------------------------
 // Functions
 
@@ -106,6 +134,7 @@ void startProgram (size_t cacheSize, enum IOMode ioMode)
 #define S1 L1
 #define S2 L2
     git_float F1=0.0f, F2=0.0f, F3=0.0f, F4=0.0f;
+    git_double D1=0.0f, D2=0.0f, D3=0.0f;
 
     git_sint32* base;   // Bottom of the stack.
     git_sint32* frame;  // Bottom of the current stack frame.
@@ -424,11 +453,21 @@ do_enter_function_L1: // Arg count is in L2.
     DO_JUMP(jfle,   L3, DECODE_FLOAT(L1) <= DECODE_FLOAT(L2));
     DO_JUMP(jfeq,   L4, floatCompare(L1, L2, L3) != 0);
     DO_JUMP(jfne,   L4, floatCompare(L1, L2, L3) == 0);
+    DO_JUMP(jdlt,   L5, DECODE_DOUBLE(L1, L2) < DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdge,   L5, DECODE_DOUBLE(L1, L2) >= DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdgt,   L5, DECODE_DOUBLE(L1, L2) > DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdle,   L5, DECODE_DOUBLE(L1, L2) <= DECODE_DOUBLE(L3, L4));
+    DO_JUMP(jdeq,   L7, doubleCompare(L1, L2, L3, L4, L5, L6, L7) != 0);
+    DO_JUMP(jdne,   L7, doubleCompare(L1, L2, L3, L4, L5, L6, L7) == 0);
+    DO_JUMP(jdisinf, L3, (((L1 == 0x7FF00000) || (L1 == 0xFFF00000)) && L2 == 0x0));
+    DO_JUMP(jdisnan, L3, (((L1 & 0x7FF00000) == 0x7FF00000) && (((L1 & 0xFFFFF) != 0) || (L2 != 0x0))));
 
 #undef DO_JUMP
 
     do_jumpabs: L7 = L1; goto do_jump_abs_L7; NEXT;
 
+    do_goto_L7_from_L7: L1 = L7; goto do_goto_L1_from_L7;
+    do_goto_L5_from_L7: L1 = L5; goto do_goto_L1_from_L7;
     do_goto_L4_from_L7: L1 = L4; goto do_goto_L1_from_L7;
     do_goto_L3_from_L7: L1 = L3; goto do_goto_L1_from_L7;
     do_goto_L2_from_L7: L1 = L2; goto do_goto_L1_from_L7;
@@ -1455,6 +1494,155 @@ do_tailcall:
     do_atan:
         F1 = atanf(DECODE_FLOAT(L1));
         S1 = ENCODE_FLOAT(F1);
+        NEXT;
+
+    // Double-precision (new with glulx spec 3.1.3)
+
+    do_numtod:
+        D1 = (git_double) L1;
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dtonumz:
+        D1 = DECODE_DOUBLE(L1, L2);
+        if (!signbit(D1)) {
+          if (isnan(D1) || isinf(D1) || (D1 > 2147483647.0))
+            S1 = 0x7FFFFFFF;
+          else
+            S1 = (git_sint32) trunc(D1);
+        } else {
+          if (isnan(D1) || isinf(D1) || (D1 < -2147483647.0))
+            S1 = 0x80000000;
+          else
+            S1 = (git_sint32) trunc(D1);
+        }
+        NEXT;
+
+    do_dtonumn:
+        D1 = DECODE_DOUBLE(L1, L2);
+        if (!signbit(D1)) {
+          if (isnan(D1) || isinf(D1) || (D1 > 2147483647.0))
+            S1 = 0x7FFFFFFF;
+          else
+            S1 = (git_sint32) round(D1);
+        } else {
+          if (isnan(D1) || isinf(D1) || (D1 < -2147483647.0))
+            S1 = 0x80000000;
+          else
+            S1 = (git_sint32) round(D1);
+        }
+        NEXT;
+
+    do_ftod:
+        D1 = (git_double) DECODE_FLOAT(L1);
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dtof:
+        F1 = (git_float) DECODE_DOUBLE(L1, L2);
+        S1 = ENCODE_FLOAT(F1);
+        NEXT;
+
+    do_dadd:
+        D1 = (DECODE_DOUBLE(L1, L2) + DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dsub:
+        D1 = (DECODE_DOUBLE(L1, L2) - DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dmul:
+        D1 = (DECODE_DOUBLE(L1, L2) * DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_ddiv:
+        D1 = (DECODE_DOUBLE(L1, L2) / DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dmodr:
+        D1 = fmod(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dmodq:
+        D1 = DECODE_DOUBLE(L1, L2);
+        D2 = DECODE_DOUBLE(L3, L4);
+        D3 = fmod(D1, D2);
+        D3 = (D1-D3) / D2;
+        ENCODE_DOUBLE(D3, &L5, &L6);
+        if ((L5 == 0) || (L5 == 0x80000000))
+          L5 = (L1 ^ L3) & 0x80000000;
+        S2 = L5;
+        S1 = L6;
+        NEXT;
+
+    do_dceil:
+        D1 = ceil(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dfloor:
+        D1 = floor(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dsqrt:
+        D1 = sqrt(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dexp:
+        D1 = exp(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dlog:
+        D1 = log(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dpow:
+        D1 = pow(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dsin:
+        D1 = sin(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dcos:
+        D1 = cos(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dtan:
+        D1 = tan(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dasin:
+        D1 = asin(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_dacos:
+        D1 = acos(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_datan:
+        D1 = atan(DECODE_DOUBLE(L1, L2));
+        ENCODE_DOUBLE(D1, &S2, &S1);
+        NEXT;
+
+    do_datan2:
+        D1 = atan2(DECODE_DOUBLE(L1, L2), DECODE_DOUBLE(L3, L4));
+        ENCODE_DOUBLE(D1, &S2, &S1);
         NEXT;
 
     // Extended undo (new with glulx spec 3.1.3)

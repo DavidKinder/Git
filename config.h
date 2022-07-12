@@ -77,6 +77,7 @@ typedef unsigned long git_uint32;
 #endif
 
 typedef float git_float;
+typedef double git_double;
 
 
 #if defined(__GNUC__)
