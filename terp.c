@@ -83,15 +83,25 @@ GIT_INLINE git_float DECODE_FLOAT(git_uint32 n) {
 
 GIT_INLINE void ENCODE_DOUBLE(git_double d, git_sint32 *hi, git_sint32 *lo)
 {
+#ifdef USE_BIG_ENDIAN
+  memcpy(hi, &d, 4);
+  memcpy(lo, ((char *)&d)+4, 4);
+#else
   memcpy(lo, &d, 4);
   memcpy(hi, ((char *)&d)+4, 4);
+#endif
 }
 
 GIT_INLINE git_double DECODE_DOUBLE(git_uint32 hi, git_uint32 lo)
 {
   git_double d;
+#ifdef USE_BIG_ENDIAN
+  memcpy(&d, &hi, 4);
+  memcpy(((char *)&d)+4, &lo, 4);
+#else
   memcpy(&d, &lo, 4);
   memcpy(((char *)&d)+4, &hi, 4);
+#endif
   return d;
 }
 

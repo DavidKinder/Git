@@ -7,6 +7,9 @@
 // Various compile-time options. You can define them in the
 // makefile or uncomment them here, whichever's easiest.
 
+// Define if we're big-endian
+// #define USE_BIG_ENDIAN
+
 // Define if we're big-endian and can read and write unaligned data.
 // #define USE_BIG_ENDIAN_UNALIGNED
 
