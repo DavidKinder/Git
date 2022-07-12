@@ -18,6 +18,8 @@ git_sint32* gStackPointer;
 Opcode* gOpcodeTable;
 #endif
 
+enum IOMode gIoMode = IO_NULL;
+
 // -------------------------------------------------------------
 // Useful macros for manipulating the stack
 
@@ -136,7 +138,7 @@ static int doubleCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3, git_sint32
 // -------------------------------------------------------------
 // Functions
 
-void startProgram (size_t cacheSize, enum IOMode ioMode)
+void startProgram (size_t cacheSize)
 {
     Block pc; // Program counter (pointer into dynamically generated code)
 
@@ -608,14 +610,14 @@ finish_undo_stub:
 finish_save_stub:
         PUSH (READ_PC);                        // PC
         PUSH ((frame - base) * 4);  // FramePtr
-        if (ioMode == IO_GLK)
+        if (gIoMode == IO_GLK)
             S1 = saveToFile (base, sp, L1);
         else
             S1 = 1;
         goto do_pop_call_stub;
 
     do_restore:
-        if (ioMode == IO_GLK
+        if (gIoMode == IO_GLK
          && restoreFromFile (base, L1, protectPos, protectSize) == 0)
         {
             sp = gStackPointer;
@@ -810,7 +812,7 @@ do_tailcall:
         git_uint32 absn;
         
         // If the IO mode is 'null', do nothing.
-        if (ioMode == IO_NULL)
+        if (gIoMode == IO_NULL)
             goto do_pop_call_stub;
 
         // Write the number into the buffer.
@@ -831,7 +833,7 @@ do_tailcall:
 
         // If we're in filter mode, push a call stub
         // and filter the next character.
-        if (ioMode == IO_FILTER)
+        if (gIoMode == IO_FILTER)
         {
             // Store the next character in the args array.
             args[0] = buffer [L2 - L6 - 1];
@@ -862,11 +864,11 @@ do_tailcall:
         // If the IO mode is 'null', or if we've reached the
         // end of the string, do nothing.
         L2 = memRead8(L7++);
-        if (L2 == 0 || ioMode == IO_NULL)
+        if (L2 == 0 || gIoMode == IO_NULL)
             goto do_pop_call_stub;
         // Otherwise we're going to have to print something,
         // If the IO mode is 'filter', filter the next char.
-        if (ioMode == IO_FILTER)
+        if (gIoMode == IO_FILTER)
         {
             // Store this character in the args array.
             args [0] = L2;
@@ -894,11 +896,11 @@ do_tailcall:
         // end of the string, do nothing.
         L2 = memRead32(L7);
         L7 += 4;
-        if (L2 == 0 || ioMode == IO_NULL)
+        if (L2 == 0 || gIoMode == IO_NULL)
             goto do_pop_call_stub;
         // Otherwise we're going to have to print something,
         // If the IO mode is 'filter', filter the next char.
-        if (ioMode == IO_FILTER)
+        if (gIoMode == IO_FILTER)
         {
             // Store this character in the args array.
             args [0] = L2;
@@ -961,7 +963,7 @@ do_tailcall:
             // This will produce infinite output in the Null or Glk
             // I/O modes, so we'll catch that here.
 
-            if (ioMode != IO_FILTER)
+            if (gIoMode != IO_FILTER)
                 fatalError ("String table prints infinite strings!");
 
             // In Filter mode, the output will be sent to the current
@@ -975,9 +977,9 @@ do_tailcall:
                 goto do_pop_call_stub;
 
             case 2: // Single char.
-                if (ioMode == IO_NULL)
+                if (gIoMode == IO_NULL)
                     { /* Do nothing */ }
-                else if (ioMode == IO_GLK)
+                else if (gIoMode == IO_GLK)
                     glk_put_char ((unsigned char) memRead8(L1));
                 else
                 {
@@ -1008,9 +1010,9 @@ do_tailcall:
                 goto resume_c_string_L7;
                 
             case 4: // Unicode char
-                if (ioMode == IO_NULL)
+                if (gIoMode == IO_NULL)
                     { /* Do nothing */ }
-                else if (ioMode == IO_GLK)
+                else if (gIoMode == IO_GLK)
                 {
 #ifdef GLK_MODULE_UNICODE
                     glk_put_char_uni (memRead32(L1));
@@ -1141,9 +1143,9 @@ do_tailcall:
 
     do_streamchar:
         L7 = READ_PC;
-        if (ioMode == IO_NULL)
+        if (gIoMode == IO_NULL)
             { /* Do nothing */ }
-        else if (ioMode == IO_GLK)
+        else if (gIoMode == IO_GLK)
         {
             unsigned char c = (L1 & 0xff);
             glk_put_char (c);
@@ -1167,9 +1169,9 @@ do_tailcall:
 
     do_streamunichar:
         L7 = READ_PC;
-        if (ioMode == IO_NULL)
+        if (gIoMode == IO_NULL)
             { /* Do nothing */ }
-        else if (ioMode == IO_GLK)
+        else if (gIoMode == IO_GLK)
         {
 #ifdef GLK_MODULE_UNICODE
             glk_put_char_uni ((glui32) L1);
@@ -1215,7 +1217,7 @@ do_tailcall:
         NEXT;
 
     do_getiosys:
-        S1 = ioMode;
+        S1 = gIoMode;
         S2 = ioRock;
         NEXT;
 
@@ -1225,7 +1227,7 @@ do_tailcall:
             case IO_NULL:
             case IO_FILTER:
             case IO_GLK:
-                ioMode = (enum IOMode) L1;
+                gIoMode = (enum IOMode) L1;
                 ioRock = L2;
                 break;
             
