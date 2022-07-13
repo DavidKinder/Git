@@ -135,6 +135,18 @@ static int doubleCompare(git_sint32 L1, git_sint32 L2, git_sint32 L3, git_sint32
   return ((D1 <= D2) && (D1 >= -D2));
 }
 
+static void testDouble()
+{
+  glui32 PI_hi = 0x400921FB;
+  glui32 PI_lo = 0x54442D18;
+  git_double pi = DECODE_DOUBLE(PI_hi, PI_lo);
+  if (!(pi > 3.1415 && pi < 3.1416)) {
+    // If this fails, on a big-endian system, check that USE_BIG_ENDIAN
+    // or USE_BIG_ENDIAN_UNALIGNED have been defined in config.h
+    fatalError("Test decode of double precision value failed");
+  }
+}
+
 // -------------------------------------------------------------
 // Functions
 
@@ -186,6 +198,7 @@ void startProgram (size_t cacheSize)
 # endif
 #endif    
 
+    testDouble ();
     initCompiler (cacheSize);
 
     // Initialise the random number generator.
