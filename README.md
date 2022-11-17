@@ -10,7 +10,7 @@ To be compiled into a useable program, Git needs to be built against a [Glk](htt
 
 ## Building on Windows
 
-Download and install Visual Studio 2019 Community edition from https://visualstudio.microsoft.com/. In the installer, under "Individual Components", make sure that "C++ Clang Compiler for Windows" and "C++ Clang-cl" are selected.
+Download and install Visual Studio 2019 Community edition from https://visualstudio.microsoft.com/. In the installer, make sure that "C++ Clang Compiler for Windows" and "C++ Clang tools for Windows" are selected.
 
 To be able to build the CHM help file, download and install Microsoft's [HTML Help Workshop](https://web.archive.org/web/20200810052030/https://www.microsoft.com/en-us/download/confirmation.aspx?id=21138). Note that this is a link to the version on the Internet Archive as the link to this on Microsoft's site does not work at the moment.
 
