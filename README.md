@@ -16,7 +16,7 @@ To be able to build the CHM help file, download and install Microsoft's [HTML He
 
 Install git (that is, the distributed version control system). I use the version of git that is part of Cygwin, a Linux-like environment for Windows, but Git for Windows can be used from a Windows command prompt.
 
-Open the environment that you are using git from (e.g. Cygwin), and switch to the root directory that the build environment will be created under (from here referred to as "\<root>"). Clone this repository with git:
+Open the environment that you are using git from, and switch to the root directory that the build environment will be created under (from here referred to as "\<root>"). Clone this repository with git:
 ```
 git clone https://github.com/DavidKinder/Git.git Adv/Git
 ```
