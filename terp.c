@@ -197,6 +197,12 @@ static void testDouble()
 // -------------------------------------------------------------
 // Functions
 
+GIT_INLINE void checkDivideArgs(git_sint32 L1, git_sint32 L2)
+{
+    if (L2 == 0) fatalError ("Divide by zero");
+    if ((L1 == 0x80000000) && (L2 == -1)) fatalError ("Divide overflow");
+}
+
 void startProgram (size_t cacheSize)
 {
     Block pc; // Program counter (pointer into dynamically generated code)
@@ -442,8 +448,8 @@ do_enter_function_L1: // Arg count is in L2.
     PEEPHOLE_STORE(add,     S1 = L1 + L2);
     PEEPHOLE_STORE(sub,     S1 = L1 - L2);
     PEEPHOLE_STORE(mul,     S1 = L1 * L2);
-    PEEPHOLE_STORE(div,     if (L2 == 0) fatalError ("Divide by zero"); S1 = L1 / L2);
-    PEEPHOLE_STORE(mod,     if (L2 == 0) fatalError ("Divide by zero"); S1 = L1 % L2);
+    PEEPHOLE_STORE(div,     checkDivideArgs(L1, L2); S1 = L1 / L2);
+    PEEPHOLE_STORE(mod,     checkDivideArgs(L1, L2); S1 = L1 % L2);
 
     PEEPHOLE_STORE(neg,     S1 = -L1);
     PEEPHOLE_STORE(bitnot,  S1 = ~L1);
