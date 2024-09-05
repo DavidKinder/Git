@@ -186,7 +186,7 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 * Version History
 
 1.3.9             The @div and @mod opcodes now check for the case of
-                  0x80000000 / -1, which is an overflow error.
+                  -$80000000 / -1, which is an overflow error.
 
 1.3.8 2023-10-12  Use either a native random number generator, or the
                   xoshiro128** algorithm, taken from Glulxe.
