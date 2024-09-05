@@ -200,7 +200,7 @@ static void testDouble()
 GIT_INLINE void checkDivideArgs(git_sint32 L1, git_sint32 L2)
 {
     if (L2 == 0) fatalError ("Divide by zero");
-    if ((L1 == 0x80000000) && (L2 == -1)) fatalError ("Divide overflow");
+    if (((git_uint32) L1 == 0x80000000) && (L2 == -1)) fatalError ("Divide overflow");
 }
 
 void startProgram (size_t cacheSize)
