@@ -72,6 +72,15 @@ void fatalError(const char* s)
     exit(1);
 }
 
+void fatalErrorI(const char* s, int i)
+{
+  const char* fmt = "%s (%X)";
+  int l = _scprintf(fmt,s,i);
+  void* msg = _alloca(l+1);
+  sprintf(msg,fmt,s,i);
+  fatalError(msg);
+}
+
 void glk_main()
 {
     void* file    = INVALID_HANDLE_VALUE;

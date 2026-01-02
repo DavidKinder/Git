@@ -37,6 +37,7 @@ extern void git (const git_uint8 * game,
                  git_uint32 undoSize);
 
 extern git_noreturn void fatalError (const char *);
+extern git_noreturn void fatalErrorI (const char *, int);
 
 // memory.c
 
