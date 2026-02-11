@@ -396,9 +396,6 @@ static void compressWithCutoff (git_uint32 cutoff)
     BlockHeader * top = (BlockHeader*) sCodeTop;
     BlockHeader * h = start;
 
-    git_uint32 saveCount = 0;
-    git_uint32 deleteCount = 0;
-
     sCodeTop = sCodeStart;
 
     while (h < top)
@@ -415,11 +412,6 @@ static void compressWithCutoff (git_uint32 cutoff)
  
             memmove (sCodeTop, h, size * sizeof(git_uint32));
             sCodeTop += size;
-            ++saveCount;
-        }
-        else
-        {
-            ++deleteCount;
         }
         h = next;
     }

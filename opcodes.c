@@ -225,10 +225,7 @@ void parseInstruction (git_uint32* pc, int * done)
     git_uint32 pcStart = *pc;
     int modes [8];
     git_uint32 opcode;
-    
-    static int ops = 0;
-    ++ops;
-    
+
     // Fetch the opcode.
     opcode = memRead8((*pc)++);
 
