@@ -86,7 +86,7 @@ typedef float git_float;
 typedef double git_double;
 
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__clang__)
 // GCC and compatible compilers such as clang
 #  define maybe_unused  __attribute__((__unused__))
 #  define git_noreturn  __attribute__((__noreturn__))
