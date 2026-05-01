@@ -73,8 +73,12 @@ or git_windows.c and modify it appropriately.
 
 The startup code needs to implement the following functions:
 
-  void glk_main()                 // Standard Glk entrypoint
-  void fatalError(const char* s)  // Display error message and quit
+  /* Standard Glk entry point. */
+  void glk_main()
+  /* Display error message and quit. */
+  void fatalError(const char* s)
+  /* Display error message, including given integer, then quit. */
+  void fatalErrorI(const char* s, int i)
 
 In glk_main(), you need to locate the game file somehow. Then you have two
 options. You can open the game as a Glk stream and pass it to this function:
