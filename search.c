@@ -1,5 +1,3 @@
-// $Id: search.c,v 1.1 2003/10/18 20:06:41 iain Exp $
-
 // search.c: Glulxe code for built-in search opcodes
 // Designed by Andrew Plotkin <erkyrath@eblong.com>
 // http://www.eblong.com/zarf/glulx/index.html

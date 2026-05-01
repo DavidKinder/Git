@@ -1,4 +1,3 @@
-// $Id: memory.h,v 1.7 2004/01/25 21:04:19 iain Exp $
 // Functions and macros for accessing game memory.
 
 #ifndef GIT_MEMORY_H

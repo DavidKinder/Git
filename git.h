@@ -1,5 +1,4 @@
 // Main header for git
-// $Id: git.h,v 1.32 2004/12/22 12:40:07 iain Exp $
 
 #ifndef GIT_H
 #define GIT_H

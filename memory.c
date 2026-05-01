@@ -1,5 +1,3 @@
-// $Id: memory.c,v 1.11 2004/01/25 21:04:19 iain Exp $
-
 #include "git.h"
 #include <stdlib.h>
 #include <string.h>

@@ -1,5 +1,3 @@
-// $Id: opcodes.h,v 1.7 2004/12/22 12:40:07 iain Exp $
-
 #ifndef OPCODES_H
 #define OPCODES_H
 

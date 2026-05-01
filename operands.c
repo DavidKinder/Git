@@ -1,5 +1,3 @@
-// $Id: operands.c,v 1.11 2004/02/02 00:13:46 iain Exp $
-
 #include "git.h"
 #include <assert.h>
 

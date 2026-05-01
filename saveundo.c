@@ -1,5 +1,3 @@
-// $Id: saveundo.c,v 1.15 2003/10/20 16:05:06 iain Exp $
-
 #include "git.h"
 #include <stdlib.h>
 #include <string.h>

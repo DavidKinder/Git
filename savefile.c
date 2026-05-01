@@ -1,5 +1,3 @@
-// $Id: savefile.c,v 1.6 2003/10/20 16:05:06 iain Exp $
-
 #include "git.h"
 
 static void writeWord (git_sint32 word)

@@ -1,4 +1,3 @@
-// $Id: peephole.c,v 1.6 2003/10/13 22:53:04 iain Exp $
 // Peephole optimiser for git
 
 #include "git.h"

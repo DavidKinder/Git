@@ -1,5 +1,3 @@
-// $Id: compiler.c,v 1.27 2004/12/10 00:37:00 iain Exp $
-
 #include "git.h"
 #include <assert.h>
 #include <stdlib.h>

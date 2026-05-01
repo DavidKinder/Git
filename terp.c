@@ -1,4 +1,3 @@
-// $Id: terp.c,v 1.42 2004/12/22 14:33:40 iain Exp $
 // Interpreter engine.
 
 #include "git.h"
