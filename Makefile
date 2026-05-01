@@ -49,7 +49,7 @@ LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS) -lm
 HEADERS = version.h git.h config.h compiler.h \
 	memory.h opcodes.h labels.inc
 
-SOURCE = compiler.c gestalt.c git.c git_mac.c git_unix.c \
+SOURCE = compiler.c gestalt.c git.c git_unix.c \
 	git_windows.c glkop.c heap.c memory.c opcodes.c \
 	operands.c peephole.c savefile.c saveundo.c \
 	search.c terp.c accel.c

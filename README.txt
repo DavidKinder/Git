@@ -45,8 +45,7 @@ have to play it by ear. If the Glk library you chose comes with instructions,
 that's probably a good place to start.
 
 On Unix, git_unix.c contains the startup code required by the Glk library.
-git_mac.c and git_windows.c contain startup code for MacGlk and WinGlk
-respectively, but I can't guarantee that they're fully up-to-date.
+On Windows, git_windows.c contains startup code required for Windows Glk.
 
 It should be possible to build Git with any C compiler, but it works best with
 GCC or Clang, because they have a non-standard extension that Git can use for a
@@ -69,8 +68,8 @@ engine use GCC's labels-as-values extension.
 * Porting to a new platform
 
 To do a new port, you first need to find a suitable Glk library, or write a new
-one. Then you need to write the startup code. Start with a copy of git_unix.c,
-git_mac.c or git_windows.c and modify it appropriately.
+one. Then you need to write the startup code. Start with a copy of git_unix.c
+or git_windows.c and modify it appropriately.
 
 The startup code needs to implement the following functions:
 
