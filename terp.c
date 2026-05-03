@@ -1732,16 +1732,6 @@ do_tailcall:
         discardUndo();
         NEXT;
 
-    // Special Git opcodes
-    
-    do_git_setcacheram:
-        gCacheRAM = (L1 == 0) ? 0 : 1;
-        NEXT;
-        
-    do_git_prunecache:
-        pruneCodeCache (L1, L2);
-        NEXT;
-    
     // Error conditions:
     
     do_error_bad_opcode:

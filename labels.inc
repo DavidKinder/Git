@@ -264,9 +264,6 @@ LABEL (dasin)
 LABEL (dacos)
 LABEL (datan)
 
-LABEL (git_setcacheram)
-LABEL (git_prunecache)
-
 LABEL (error_bad_opcode)
 LABEL (recompile)
 

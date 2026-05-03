@@ -51,9 +51,6 @@ git_uint32 gestalt (enum GestaltSelector sel, git_uint32 param)
         case GESTALT_DOUBLE:
             return 1;
 
-        case GESTALT_GIT_CACHE_CONTROL:
-            return 1;
-            
         default: // Unknown selector.
             return 0;
     }

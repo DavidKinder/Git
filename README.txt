@@ -190,6 +190,9 @@ also to Eliuk Blau for tracking down bugs in the memory management opcodes.
 
 1.3.9             The @div and @mod opcodes now check for the case of
                   -$80000000 / -1, which is an overflow error.
+                  Previous versions of Git included two non-standard opcodes:
+                  @git_setcacheram and @git_prunecache. These have now been
+                  removed.
 
 1.3.8 2023-10-12  Use either a native random number generator, or the
                   xoshiro128** algorithm, taken from Glulxe.

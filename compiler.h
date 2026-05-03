@@ -51,7 +51,6 @@ extern Block peekAtEmittedStuff (int numOpcodes);
 // -------------------------------------------------------------
 // Accessing compiled code
 
-extern void pruneCodeCache (git_uint32 start, git_uint32 size);
 extern void resetCodeCache ();
 extern void compressCodeCache ();
 

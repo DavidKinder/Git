@@ -579,12 +579,7 @@ void parseInstruction (git_uint32* pc, int * done)
 
         case op_jdisnan: parseLLL_branch (pc, label_jdisnan_var); break;
         case op_jdisinf: parseLLL_branch (pc, label_jdisinf_var); break;
-           
-        // Special Git opcodes
-        
-        case op_git_setcacheram: parseL (pc, label_git_setcacheram); break;
-        case op_git_prunecache: parseLL (pc, label_git_prunecache); break;
-        
+
         default:
             // Unknown opcode.
             abortCompilation();

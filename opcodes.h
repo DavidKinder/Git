@@ -171,9 +171,4 @@
 #define op_jdisnan      (0x238)
 #define op_jdisinf      (0x239)
 
-// Special cache control opcodes.
-
-#define op_git_setcacheram (0x7940)
-#define op_git_prunecache  (0x7941)
-
 #endif // OPCODES_H
