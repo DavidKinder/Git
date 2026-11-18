@@ -400,13 +400,13 @@ do_enter_function_L1: // Arg count is in L2.
     switch (L7)
     {
         case 0xC0: // arguments should be placed on the stack.
-            // argc is in L2; we'll randomly use L5 as scratch.
-            CHECK_FREE(L5 + 1);
             // Initialise the local variables.
             for ( ; L4 > 0 ; --L4)
                 PUSH (0);
             // This is where the temporary values start, so:
             values = sp;
+            // argc is in L2; we'll randomly use L5 as scratch.
+            CHECK_FREE(L2 + 1);
             // Push the args onto the stack.
             for (L5 = 0 ; L5 < L2 ; ++L5)
                 PUSH (args [L5]);
