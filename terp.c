@@ -30,6 +30,7 @@ enum IOMode gIoMode = IO_NULL;
 
 #define CHECK_FREE(n) if ((top - sp) < (n)) goto stack_overflow
 #define CHECK_USED(n) if ((sp - values) < (n)) goto stack_underflow
+#define CHECK_ARGS(n) if ((n) > argsSize) args = growArgs (args, argsFixed, &argsSize, (n))
 
 // -------------------------------------------------------------
 // Random number generator, from Glulxe
@@ -202,6 +203,20 @@ GIT_INLINE void checkDivideArgs(git_sint32 L1, git_sint32 L2)
     if (((git_uint32) L1 == 0x80000000) && (L2 == -1)) fatalError ("Divide overflow");
 }
 
+// Make room for count arguments, where args is too small.
+static git_sint32 * growArgs (git_sint32 * args, git_sint32 * argsFixed, git_sint32 * argsSize, git_sint32 count)
+{
+    git_sint32 * newArgs = NULL;
+    if ((size_t) count <= SIZE_MAX / sizeof (git_sint32))
+        newArgs = (args == argsFixed)
+            ? malloc ((size_t) count * sizeof (git_sint32))
+            : realloc (args, (size_t) count * sizeof (git_sint32));
+    if (newArgs == NULL)
+        fatalError ("Not enough memory for the arguments");
+    *argsSize = count;
+    return newArgs;
+}
+
 void startProgram (size_t cacheSize)
 {
     Block pc; // Program counter (pointer into dynamically generated code)
@@ -219,7 +234,9 @@ void startProgram (size_t cacheSize)
     git_sint32* sp;     // Next free stack slot.
     git_sint32* top;    // The top of the stack -- that is, the first unusable slot.
 
-    git_sint32 args [64]; // Array of arguments. Count is stored in L2.
+    git_sint32 argsFixed [64];     // Room for up to 64 arguments.
+    git_sint32* args = argsFixed;  // Array of arguments. Count is stored in L2.
+    git_sint32 argsSize = 64;      // Room in args, grown by CHECK_ARGS.
 
     git_uint32 ioRock = 0;
 
@@ -400,13 +417,13 @@ do_enter_function_L1: // Arg count is in L2.
     switch (L7)
     {
         case 0xC0: // arguments should be placed on the stack.
-            // argc is in L2; we'll randomly use L5 as scratch.
-            CHECK_FREE(L5 + 1);
             // Initialise the local variables.
             for ( ; L4 > 0 ; --L4)
                 PUSH (0);
             // This is where the temporary values start, so:
             values = sp;
+            // argc is in L2; we'll randomly use L5 as scratch.
+            CHECK_FREE(L2 + 1);
             // Push the args onto the stack.
             for (L5 = 0 ; L5 < L2 ; ++L5)
                 PUSH (args [L5]);
@@ -555,6 +572,7 @@ do_enter_function_L1: // Arg count is in L2.
     do_args_stack:
         // The first argument is topmost in the stack; the count is in L2.
         CHECK_USED(L2);
+        CHECK_ARGS(L2);
         // We want to store the arguments in 'args' in the same order.
         for (L3 = L2 - 1 ; L3 >= 0 ; --L3)
             args [L3] = POP;
@@ -563,24 +581,28 @@ do_enter_function_L1: // Arg count is in L2.
     // Specialised versions of above:
     do_args_stack_call_stub_discard:
         CHECK_USED(L2);
+        CHECK_ARGS(L2);
         for (L3 = L2 - 1 ; L3 >= 0 ; --L3)
             args [L3] = POP;
         goto do_call_stub_discard;
         
     do_args_stack_call_stub_addr:
         CHECK_USED(L2);
+        CHECK_ARGS(L2);
         for (L3 = L2 - 1 ; L3 >= 0 ; --L3)
             args [L3] = POP;
         goto do_call_stub_addr;
 
     do_args_stack_call_stub_local:
         CHECK_USED(L2);
+        CHECK_ARGS(L2);
         for (L3 = L2 - 1 ; L3 >= 0 ; --L3)
             args [L3] = POP;
         goto do_call_stub_local;
 
     do_args_stack_call_stub_stack:
         CHECK_USED(L2);
+        CHECK_ARGS(L2);
         for (L3 = L2 - 1 ; L3 >= 0 ; --L3)
             args [L3] = POP;
         goto do_call_stub_stack;
@@ -854,7 +876,7 @@ do_tailcall:
         S1 = sp - values; NEXT;
     
     do_stkpeek:
-        if (L1 < 0 || L1 > (sp - values))
+        if (L1 < 0 || L1 >= (sp - values))
             fatalError("Out of bounds in stkpeek");
         S1 = sp[-1 - L1]; NEXT;
 
@@ -864,6 +886,7 @@ do_tailcall:
 
     do_stkcopy:
         CHECK_USED(L1);
+        CHECK_FREE(L1);
         for (L2 = L1 ; L2 > 0 ; --L2)
         {
             L3 = sp[-L1];
@@ -1156,6 +1179,7 @@ do_tailcall:
 
                     case 0xC0: case 0xC1: // Function.
                         // Retrieve arguments.
+                        CHECK_ARGS(L2);
                         for (L1 += 8, L4 = L2; L4 > 0 ; --L4, L1+=4)
                             args[L4-1] = memRead32(L1);
                         // Enter function.
@@ -1339,6 +1363,7 @@ do_tailcall:
     do_glk:
         // The first argument is topmost in the stack; count is in L2.
         CHECK_USED(L2);
+        CHECK_ARGS(L2);
         // We want to store the arguments in 'args' in the same order.
         for (L3 = 0 ; L3 < L2 ; ++L3)
             args [L3] = POP;
@@ -1422,7 +1447,7 @@ do_tailcall:
     
     do_mzero:
         if (L1 > 0) {
-          if (L2 < gRamStart || (L2 + L1) > gEndMem)
+          if (L2 < gRamStart || L2 > gEndMem || L1 > gEndMem - L2)
             memWriteError(L2);
           memset(gMem + L2, 0, L1);
         }
@@ -1430,9 +1455,9 @@ do_tailcall:
         
     do_mcopy:
         if (L1 > 0) {
-            if (L2 < 0 || (L2 + L1) > gEndMem)
+            if (L2 < 0 || L2 > gEndMem || L1 > gEndMem - L2)
                 memReadError(L2);
-            if (L3 < gRamStart || (L3 + L1) > gEndMem)
+            if (L3 < gRamStart || L3 > gEndMem || L1 > gEndMem - L3)
                 memWriteError(L3);
             memmove(gMem + L3, gMem + L2, L1);
         }
@@ -1750,6 +1775,8 @@ do_tailcall:
 
 finished:
 
+    if (args != argsFixed)
+        free (args);
     free (base);
     shutdownCompiler();
 }
