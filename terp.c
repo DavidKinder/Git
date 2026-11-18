@@ -854,7 +854,7 @@ do_tailcall:
         S1 = sp - values; NEXT;
     
     do_stkpeek:
-        if (L1 < 0 || L1 > (sp - values))
+        if (L1 < 0 || L1 >= (sp - values))
             fatalError("Out of bounds in stkpeek");
         S1 = sp[-1 - L1]; NEXT;
 
