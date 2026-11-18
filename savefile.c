@@ -88,8 +88,8 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
 
             gotStack = 1;
 
-            if (chunkSize & 3)
-                goto failed;
+            if ((chunkSize & 3) || chunkSize > memRead32 (20))
+                goto failed; // Not whole words, or bigger than the stack.
 
             gStackPointer = base;
             for ( ; chunkSize > 0 ; chunkSize -= 4)
@@ -125,7 +125,7 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
                 
                 // Bytes below ExtStart are stored XOR-ed with the story
                 // file, and a run can cross ExtStart.
-                for (++mult ; mult > 0 ; --mult, ++i)
+                for (++mult ; mult > 0 && i < gEndMem ; --mult, ++i)
                     if (i >= protectEnd || i < protectPos)
                         gMem [i] = (i < gExtStart) ? (gInitMem [i] ^ c) : c;
             }
@@ -151,12 +151,14 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
 
             gotHeap = 1;
 
-            if (chunkSize & 3)
-                goto failed;
+            if (chunkSize & 7)
+                goto failed; // Not a start, a count and whole blocks.
 
             if (chunkSize > 0)
             {
                 heap = malloc (chunkSize);
+                if (heap == 0)
+                    goto failed;
                 heapSize = chunkSize / 4;
                 for (i = 0 ; i < heapSize ; ++i)
                     heap[i] = readWord(file);
