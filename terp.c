@@ -1309,6 +1309,11 @@ do_tailcall:
         // Reset game memory to its initial state.
         resetMemory(protectPos, protectSize);
 
+        // Reset the I/O system and the string table.
+        gIoMode = IO_NULL;
+        ioRock = 0;
+        stringTable = memRead32(28);
+
         // Reset all the stack pointers.
         frame = locals = values = sp = base;
 
