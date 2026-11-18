@@ -130,13 +130,13 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
                         gMem [i] = (i < gExtStart) ? (gInitMem [i] ^ c) : c;
             }
 
-            while (i < gExtStart)
+            for ( ; i < gExtStart ; ++i)
                 if (i >= protectEnd || i < protectPos)
-                    gMem [i] = gInitMem [i], ++i;
+                    gMem [i] = gInitMem [i];
 
-            while (i < gEndMem)
+            for ( ; i < gEndMem ; ++i)
                 if (i >= protectEnd || i < protectPos)
-                    gMem [i] = 0, ++i;
+                    gMem [i] = 0;
 
             if (bytesRead != chunkSize)
                 goto failed; // Too much data!
