@@ -1423,7 +1423,7 @@ do_tailcall:
     
     do_mzero:
         if (L1 > 0) {
-          if (L2 < gRamStart || (L2 + L1) > gEndMem)
+          if (L2 < gRamStart || L2 > gEndMem || L1 > gEndMem - L2)
             memWriteError(L2);
           memset(gMem + L2, 0, L1);
         }
@@ -1431,9 +1431,9 @@ do_tailcall:
         
     do_mcopy:
         if (L1 > 0) {
-            if (L2 < 0 || (L2 + L1) > gEndMem)
+            if (L2 < 0 || L2 > gEndMem || L1 > gEndMem - L2)
                 memReadError(L2);
-            if (L3 < gRamStart || (L3 + L1) > gEndMem)
+            if (L3 < gRamStart || L3 > gEndMem || L1 > gEndMem - L3)
                 memWriteError(L3);
             memmove(gMem + L3, gMem + L2, L1);
         }
