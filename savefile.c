@@ -33,6 +33,8 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
     git_uint32 i;
     strid_t file;
     glui32 fileSize, fileStart;
+    glui32 heapSize = 0;
+    glui32 * heap = 0;
 
     int gotIdent = 0;
     int gotMemory = 0;
@@ -54,9 +56,6 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
     if (readWord (file) != readtag("IFZS"))
         return 1; // Not a Quetzal file.
     
-    // Discard the current heap.
-    heap_clear();
-    
     // Read all the chunks.
     
     while (glk_stream_get_position(file) < fileStart + fileSize)
@@ -68,29 +67,29 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
         if (chunkType == readtag("IFhd"))
         {
             if (gotIdent)
-                return 1;
+                goto failed;
 
             gotIdent = 1;
 
             if (chunkSize != 128)
-                return 1;
+                goto failed;
 
             for (i = 0 ; i < 128 ; ++i)
             {
                 glui32 c = glk_get_char_stream (file);
                 if (gInitMem [i] != c)
-                    return 1;
+                    goto failed;
             }
         }
         else if (chunkType == readtag("Stks"))
         {
             if (gotStack)
-                return 1;
+                goto failed;
 
             gotStack = 1;
 
-            if (chunkSize & 3)
-                return 1;
+            if ((chunkSize & 3) || chunkSize > memRead32 (20))
+                goto failed; // Not whole words, or bigger than the stack.
 
             gStackPointer = base;
             for ( ; chunkSize > 0 ; chunkSize -= 4)
@@ -100,32 +99,18 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
         {
             git_uint32 bytesRead = 0;
             if (gotMemory)
-                return 1;
+                goto failed;
 
             gotMemory = 1;
+
+            // Discard the current heap.
+            heap_clear();
 
             if (resizeMemory (readWord(file), 1))
                 fatalError ("Can't resize memory map");
 
             bytesRead = 4;
             i = gRamStart;
-            while (i < gExtStart && bytesRead < chunkSize)
-            {
-                int mult = 0;
-                char c = (char) glk_get_char_stream(file);
-                ++bytesRead;
-                
-                if (c == 0)
-                {
-                    mult = (unsigned char) glk_get_char_stream(file);
-                    ++bytesRead;
-                }
-                
-                for (++mult ; mult > 0 ; --mult, ++i)
-                    if (i >= protectEnd || i < protectPos)
-                        gMem [i] = gInitMem [i] ^ c;
-            }
-
             while (i < gEndMem && bytesRead < chunkSize)
             {
                 int mult = 0;
@@ -138,52 +123,45 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
                     ++bytesRead;
                 }
                 
-                for (++mult ; mult > 0 ; --mult, ++i)
+                // Bytes below ExtStart are stored XOR-ed with the story
+                // file, and a run can cross ExtStart.
+                for (++mult ; mult > 0 && i < gEndMem ; --mult, ++i)
                     if (i >= protectEnd || i < protectPos)
-                        gMem [i] = c;
+                        gMem [i] = (i < gExtStart) ? (gInitMem [i] ^ c) : c;
             }
 
-            while (i < gExtStart)
+            for ( ; i < gExtStart ; ++i)
                 if (i >= protectEnd || i < protectPos)
-                    gMem [i] = gInitMem [i], ++i;
+                    gMem [i] = gInitMem [i];
 
-            while (i < gEndMem)
+            for ( ; i < gEndMem ; ++i)
                 if (i >= protectEnd || i < protectPos)
-                    gMem [i] = 0, ++i;
+                    gMem [i] = 0;
 
             if (bytesRead != chunkSize)
-                return 1; // Too much data!
+                goto failed; // Too much data!
 
             if (chunkSize & 1)
                 glk_get_char_stream (file);
         }
         else if (chunkType == readtag("MAll"))
         {
-            glui32 heapSize = 0;
-            glui32 * heap = 0;
-
             if (gotHeap)
-                return 1;
+                goto failed;
 
             gotHeap = 1;
 
-            if (chunkSize & 3)
-                return 1;
+            if (chunkSize & 7)
+                goto failed; // Not a start, a count and whole blocks.
 
             if (chunkSize > 0)
             {
                 heap = malloc (chunkSize);
+                if (heap == 0)
+                    goto failed;
                 heapSize = chunkSize / 4;
                 for (i = 0 ; i < heapSize ; ++i)
                     heap[i] = readWord(file);
-
-                /* The summary might have come from any interpreter, so it could
-                  be out of order. We'll sort it. */
-                qsort(heap+2, (heapSize-2)/2, 8, &sort_heap_summary);
-
-                if (heap_apply_summary (heapSize, heap))
-                    fatalError ("Couldn't apply heap summary");
-                free (heap);
             }
         }
         else
@@ -204,9 +182,27 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
     if (!gotMemory)
         fatalError ("No memory chunk in save file");
 
+    // Apply the heap summary, now that the memory chunk has set the
+    // memory size, so that the free space at the end of the heap is
+    // recorded.
+    if (heap != 0)
+    {
+        /* The summary might have come from any interpreter, so it could
+          be out of order. We'll sort it. */
+        qsort(heap+2, (heapSize-2)/2, 8, &sort_heap_summary);
+
+        if (heap_apply_summary (heapSize, heap))
+            fatalError ("Couldn't apply heap summary");
+        free (heap);
+    }
+
     // If we reach this point, we restored successfully.
 
     return 0;
+
+failed:
+    free (heap);
+    return 1;
 }
 
 git_sint32 saveToFile (git_sint32 * base, git_sint32 * sp, git_sint32 id)
