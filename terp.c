@@ -864,6 +864,7 @@ do_tailcall:
 
     do_stkcopy:
         CHECK_USED(L1);
+        CHECK_FREE(L1);
         for (L2 = L1 ; L2 > 0 ; --L2)
         {
             L3 = sp[-L1];
