@@ -111,23 +111,6 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
 
             bytesRead = 4;
             i = gRamStart;
-            while (i < gExtStart && bytesRead < chunkSize)
-            {
-                int mult = 0;
-                char c = (char) glk_get_char_stream(file);
-                ++bytesRead;
-                
-                if (c == 0)
-                {
-                    mult = (unsigned char) glk_get_char_stream(file);
-                    ++bytesRead;
-                }
-                
-                for (++mult ; mult > 0 ; --mult, ++i)
-                    if (i >= protectEnd || i < protectPos)
-                        gMem [i] = gInitMem [i] ^ c;
-            }
-
             while (i < gEndMem && bytesRead < chunkSize)
             {
                 int mult = 0;
@@ -140,9 +123,11 @@ git_sint32 restoreFromFile (git_sint32 * base, git_sint32 id,
                     ++bytesRead;
                 }
                 
+                // Bytes below ExtStart are stored XOR-ed with the story
+                // file, and a run can cross ExtStart.
                 for (++mult ; mult > 0 ; --mult, ++i)
                     if (i >= protectEnd || i < protectPos)
-                        gMem [i] = c;
+                        gMem [i] = (i < gExtStart) ? (gInitMem [i] ^ c) : c;
             }
 
             while (i < gExtStart)
